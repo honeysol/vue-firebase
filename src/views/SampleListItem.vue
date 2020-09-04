@@ -99,7 +99,7 @@ export default Vue.extend({
 table {
   td,
   th {
-    padding: 0.2rem;
+    padding: 0.4rem 0.2rem;
   }
   .center {
     text-align: center;

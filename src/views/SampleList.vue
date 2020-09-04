@@ -1,27 +1,31 @@
 <template>
   <div class="componentRoot">
     <table class="table">
-      <tr>
-        <th>
-          ID
-        </th>
-        <th>
-          Update Time
-        </th>
-        <th>
-          Title
-        </th>
-        <th>
-          Text
-        </th>
-        <th></th>
-      </tr>
-      <SampleListItem
-        v-for="document in documents"
-        :key="document.id + '#'"
-        :document="document"
-        :collection="collection"
-      />
+      <thead class="thead-light">
+        <tr>
+          <th>
+            ID
+          </th>
+          <th>
+            Update Time
+          </th>
+          <th>
+            Title
+          </th>
+          <th>
+            Text
+          </th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <SampleListItem
+          v-for="document in documents"
+          :key="document.id + '#'"
+          :document="document"
+          :collection="collection"
+        />
+      </tbody>
     </table>
 
     <div style="margin: 10px">
@@ -69,7 +73,7 @@ export default Vue.extend({
 table {
   td,
   th {
-    padding: 0.2rem;
+    padding: 0.4rem 0.2rem;
   }
 }
 .componentRoot {

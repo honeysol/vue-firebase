@@ -9,17 +9,42 @@ Vue.use(VueRouter);
 const routes: Array<RouteConfig> = [
   {
     path: "/",
-    name: "Home",
-    component: Home
+    // name: "Home",
+    redirect: _to => {
+      return "/signIn";
+    }
   },
   {
     path: "/about",
     name: "About",
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
     component: () =>
       import(/* webpackChunkName: "about" */ "../views/About.vue")
+  },
+  {
+    path: "/signIn",
+    name: "SignIn",
+    component: () =>
+      import(/* webpackChunkName: "signIn" */ "@/views/auth/SignIn.vue")
+  },
+  {
+    path: "/signUp",
+    name: "SignUp",
+    component: () =>
+      import(/* webpackChunkName: "signUp" */ "@/views/auth/SignUp.vue")
+  },
+  {
+    path: "/mailAuth",
+    name: "MailAuth",
+    component: () =>
+      import(/* webpackChunkName: "mailAuth" */ "@/views/auth/MailAuth.vue")
+  },
+  {
+    path: "/passwordReset",
+    name: "PasswordReset",
+    component: () =>
+      import(
+        /* webpackChunkName: "passwordReset" */ "@/views/auth/PasswordReset.vue"
+      )
   },
   {
     path: "/sample/:id",
