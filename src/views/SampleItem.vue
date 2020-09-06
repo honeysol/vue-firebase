@@ -63,8 +63,8 @@ import firebaseProject from "@/common/firebaseProject";
 const db = firebaseProject.firestore();
 const collection = db.collection("publicDocuments");
 import { Sample } from "@/models/sample";
+import { confirm } from "@/services/dialog";
 
-console.log(firestore.Timestamp);
 export default Vue.extend({
   name: "SampleItem",
   components: {},
@@ -83,20 +83,39 @@ export default Vue.extend({
     }
   },
   methods: {
-    remove() {
-      this.collection.doc(this.document?.id).delete();
-      this.$router.push({ name: "SampleList" });
+    async remove() {
+      const response = await confirm({
+        title: "Confirm",
+        text: "Are you sure to delete?"
+      });
+      if (response) {
+        this.collection.doc(this.document?.id).delete();
+        this.$router.push({ name: "SampleList" });
+      }
     },
-    save() {
-      this.collection
-        .doc(this.document?.id)
-        .update({ ...this.editingDocument, updateTime: Date.now() });
-      this.editingDocument = null;
-      this.$router.push({ name: "SampleList" });
+    async save() {
+      const response = await confirm({
+        title: "Confirm",
+        text: "Are you sure to save?"
+      });
+      if (response) {
+        this.collection
+          .doc(this.document?.id)
+          .update({ ...this.editingDocument, updateTime: Date.now() });
+        this.editingDocument = null;
+        this.$router.push({ name: "SampleList" });
+      }
     },
-    discard() {
-      this.editingDocument = null;
+    async discard() {
+      const response = await confirm({
+        title: "Confirm",
+        text: "Are you sure to discard?"
+      });
+      if (response) {
+        this.editingDocument = null;
+      }
     },
+
     edited(fieldName: keyof Sample) {
       return this.editingDocument?.[fieldName];
     },

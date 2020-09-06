@@ -47,8 +47,8 @@ import Vue from "vue";
 import { firestore } from "firebase/app";
 import dayjs from "dayjs";
 import { Sample } from "@/models/sample";
+import { confirm } from "@/services/dialog";
 
-console.log(firestore.Timestamp);
 export default Vue.extend({
   name: "SampleListItem",
   components: {},
@@ -68,17 +68,35 @@ export default Vue.extend({
     }
   },
   methods: {
-    remove() {
-      this.collection.doc(this.document?.id).delete();
+    async remove() {
+      const response = await confirm({
+        title: "Confirm",
+        text: "Are you sure to delete?"
+      });
+      if (response) {
+        this.collection.doc(this.document?.id).delete();
+      }
     },
-    save() {
-      this.collection
-        .doc(this.document?.id)
-        .update({ ...this.editingDocument, updateTime: Date.now() });
-      this.editingDocument = null;
+    async save() {
+      const response = await confirm({
+        title: "Confirm",
+        text: "Are you sure to save?"
+      });
+      if (response) {
+        this.collection
+          .doc(this.document?.id)
+          .update({ ...this.editingDocument, updateTime: Date.now() });
+        this.editingDocument = null;
+      }
     },
-    discard() {
-      this.editingDocument = null;
+    async discard() {
+      const response = await confirm({
+        title: "Confirm",
+        text: "Are you sure to discard?"
+      });
+      if (response) {
+        this.editingDocument = null;
+      }
     },
     edited(fieldName: keyof Sample) {
       return this.editingDocument?.[fieldName];
