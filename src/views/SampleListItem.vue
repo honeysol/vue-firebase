@@ -2,19 +2,19 @@
   <tr>
     <td>{{ documentId }}</td>
     <td>
-      {{ formatDate(effectiveDocument.updateTime) }}
+      {{ formatDate(document.effective.updateTime) }}
     </td>
     <td>
       <input
         :class="document.editing && document.editing.title && 'isEditing'"
-        :value="effectiveDocument.title"
+        :value="document.effective.title"
         @input="document.update('title', $event.target.value)"
       />
     </td>
     <td>
       <input
         :class="document.editing && document.editing.text && 'isEditing'"
-        :value="effectiveDocument.text"
+        :value="document.effective.text"
         @input="document.update('text', $event.target.value)"
       />
     </td>
@@ -73,12 +73,14 @@ export default Vue.extend({
     // this.document = null;
   },
   computed: {
-    effectiveDocument(): Sample {
-      return { ...this.document?.data, ...this.document?.editing };
-    },
     document(): Document<Sample> {
-      console.log("document updated");
+      console.log("document updated", this.documentId);
       return new Document<Sample>(this.collection.doc(this.documentId));
+    }
+  },
+  watch: {
+    document(document, oldDocument) {
+      oldDocument?.close();
     }
   },
   methods: {

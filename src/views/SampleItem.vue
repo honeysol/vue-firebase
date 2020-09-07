@@ -11,8 +11,8 @@
           class="form-control"
           readonly
           :value="
-            effectiveDocument.updateTime &&
-              formatDate(effectiveDocument.updateTime)
+            document.effective.updateTime &&
+              formatDate(document.effective.updateTime)
           "
         />
       </div>
@@ -21,7 +21,7 @@
         <input
           class="form-control"
           :class="document.editing && document.editing.title && 'isEditing'"
-          :value="effectiveDocument.title"
+          :value="document.effective.title"
           @input="document.update('title', $event.target.value)"
         />
       </div>
@@ -30,7 +30,7 @@
         <input
           class="form-control"
           :class="document.editing && document.editing.text && 'isEditing'"
-          :value="effectiveDocument.text"
+          :value="document.effective.text"
           @input="document.update('text', $event.target.value)"
         />
       </div>
@@ -80,12 +80,16 @@ export default Vue.extend({
     // this.document = null;
   },
   computed: {
-    effectiveDocument(): Sample {
-      return { ...this.document?.data, ...this.document?.editing };
-    },
-    document(): Document<Sample> {
-      console.log("document updated");
-      return new Document<Sample>(collection.doc(this.$route.params.id));
+    document(): Document<Sample> | null {
+      console.log("document updated", this.$route.params.id);
+      return this.$route.params.id
+        ? new Document<Sample>(collection.doc(this.$route.params.id))
+        : null;
+    }
+  },
+  watch: {
+    document(document, oldDocument) {
+      oldDocument?.close();
     }
   },
   methods: {

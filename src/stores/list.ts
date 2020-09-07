@@ -26,11 +26,11 @@ export class List<T> {
     );
     Vue.observable(this);
   }
-  close() {
-    this[unregisterField]();
-  }
   get ref() {
     return this[refField];
+  }
+  close() {
+    this[unregisterField]();
   }
   add() {
     this[refField].doc(documentId()).set({

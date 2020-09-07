@@ -7,20 +7,26 @@ const unregisterField = Symbol("unregister");
 
 export class Document<T> {
   data: null | T = null;
-  [refField]: firestore.DocumentReference;
   editing: null | Partial<T> = null;
+  effective: Partial<T> = {};
+  [refField]: firestore.DocumentReference;
   [unregisterField]: () => void;
-  id: string;
   constructor(ref: firestore.DocumentReference) {
-    this.id = ref.id;
     this[unregisterField] = ref.onSnapshot(
       (snapshot: firestore.DocumentSnapshot) => {
         this.data = (snapshot.data() || null) as T;
+        this.updateEffective();
         console.log("snapshot", this.data);
       }
     );
     this[refField] = ref;
     Vue.observable(this);
+  }
+  get ref() {
+    return this[refField];
+  }
+  get id() {
+    return this[refField].id;
   }
   close() {
     this[unregisterField]();
@@ -64,5 +70,9 @@ export class Document<T> {
       this.editing = {};
     }
     Vue.set(this.editing, fieldName, value);
+    this.updateEffective();
+  }
+  updateEffective() {
+    this.effective = { ...this.data, ...this.editing };
   }
 }
