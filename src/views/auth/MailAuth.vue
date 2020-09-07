@@ -22,7 +22,7 @@ import Vue from "vue";
 import authentication from "@/stores/authentication";
 
 class ChangePasswordData {
-  password = null as string | null;
+  password: string | null = null;
 }
 
 export default Vue.extend({

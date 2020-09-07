@@ -32,19 +32,19 @@ export default Vue.extend({
     };
   },
   methods: {
-    async add({
+    add<T>({
       props,
       callback,
       component
     }: {
       props: any;
-      callback: modalCallback;
+      callback: (result: T | null) => void;
       component: typeof Vue;
-    }) {
+    }): void {
       const modalParam = {
         component,
         props,
-        onClose: (result: any) => {
+        onClose: (result: T | null) => {
           this.modals = this.modals.filter(modal => modal !== modalParam);
           callback(result);
         }

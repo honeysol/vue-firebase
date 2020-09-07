@@ -59,7 +59,7 @@ export default Vue.extend({
   props: {
     title: String,
     text: String,
-    buttons: Array as Vue.PropType<ButtonParams[]>
+    buttons: Array as Vue.PropType<ButtonParams<any>[]>
   },
   data() {
     return {

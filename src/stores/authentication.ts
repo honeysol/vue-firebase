@@ -15,8 +15,8 @@ interface AuthenticationReponse {
 
 class Authentication {
   isInitializing = true;
-  user = null as null | firebase.User;
-  userCredential = null as null | firebase.auth.UserCredential;
+  user: null | firebase.User = null;
+  userCredential: null | firebase.auth.UserCredential = null;
   ready = this.init();
 
   get status() {

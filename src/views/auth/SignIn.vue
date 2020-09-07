@@ -40,8 +40,8 @@ import Vue from "vue";
 import authentication from "@/stores/authentication";
 
 class SignInData {
-  email = null as string | null;
-  password = null as string | null;
+  email: string | null = null;
+  password: string | null = null;
 }
 
 export default Vue.extend({

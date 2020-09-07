@@ -37,7 +37,7 @@ import Vue from "vue";
 import authentication from "@/stores/authentication";
 
 class SignUpData {
-  email = null as string | null;
+  email: string | null = null;
 }
 
 export default Vue.extend({

@@ -1,23 +1,23 @@
 import Dialog from "./Dialog.vue";
 
-export interface ButtonParams {
+export interface ButtonParams<T> {
   title: string;
   class: string;
-  value: any;
+  value: T;
 }
 
 import modalService from "@/services/modal";
 
-const openDialog = ({
+const openDialog = <T>({
   title,
   text,
   buttons
 }: {
   title: string;
   text: string;
-  buttons: Array<ButtonParams>;
-}) => {
-  return modalService.openModal({
+  buttons: Array<ButtonParams<T>>;
+}): Promise<T | null> => {
+  return modalService.openModal<T>({
     props: {
       title,
       text,
@@ -33,8 +33,8 @@ export const alert = async ({
 }: {
   title: string;
   text: string;
-}): Promise<true | null> => {
-  const response = await openDialog({
+}) => {
+  const response = await openDialog<true>({
     title,
     text,
     buttons: [
@@ -45,7 +45,7 @@ export const alert = async ({
       }
     ]
   });
-  return response as true | null;
+  return response;
 };
 
 export const confirm = async ({
@@ -55,7 +55,7 @@ export const confirm = async ({
   title: string;
   text: string;
 }): Promise<boolean | null> => {
-  const response = await openDialog({
+  const response = await openDialog<boolean>({
     title,
     text,
     buttons: [
@@ -71,5 +71,5 @@ export const confirm = async ({
       }
     ]
   });
-  return response as boolean | null;
+  return response;
 };

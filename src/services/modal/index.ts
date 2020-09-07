@@ -1,21 +1,21 @@
 import Vue from "vue";
 
 interface ModalComponent {
-  add({
+  add<T>({
     props,
     callback,
     component
   }: {
     props: any;
-    callback: (result: any) => void;
+    callback: (result: T | null) => void;
     component: typeof Vue;
-  }): Promise<void>;
+  }): void;
 }
 
 class ModalService {
-  modalComponent = null as ModalComponent | null;
-  openModal({ props, component }: { props: any; component: typeof Vue }) {
-    return new Promise(resolve => {
+  modalComponent: ModalComponent | null = null;
+  openModal<T>({ props, component }: { props: any; component: typeof Vue }) {
+    return new Promise<T | null>(resolve => {
       this.modalComponent?.add({ props, component, callback: resolve });
     });
   }
