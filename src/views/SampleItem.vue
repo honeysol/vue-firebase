@@ -72,42 +72,20 @@ export default Vue.extend({
   components: {},
   props: {},
   data() {
-    return {
-      document: null as Document<Sample> | null
-    };
-  },
-  created() {
-    console.log("created", this);
+    return {};
   },
   beforeDestroy() {
-    console.log("beforeDestroy");
     this.document?.close();
     // no effect
     // this.document = null;
   },
   computed: {
-    documentId(): string {
-      return this.$route.params.id;
-    },
     effectiveDocument(): Sample {
       return { ...this.document?.data, ...this.document?.editing };
-    }
-    // document(): Document<Sample> {
-    //   console.log("document updated");
-    //   const documentId = this.documentId;
-    //   return new Document<Sample>(collection.doc(documentId));
-    // }
-  },
-  watch: {
-    documentId: {
-      handler(documentId) {
-        this.document = new Document<Sample>(collection.doc(documentId));
-      },
-      immediate: true
     },
-    document(_document, oldDocument) {
-      console.log("close");
-      oldDocument?.close();
+    document(): Document<Sample> {
+      console.log("document updated");
+      return new Document<Sample>(collection.doc(this.$route.params.id));
     }
   },
   methods: {

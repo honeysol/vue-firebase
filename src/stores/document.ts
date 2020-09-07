@@ -2,23 +2,28 @@ import Vue from "vue";
 import { firestore } from "firebase/app";
 import { confirm } from "@/services/dialog";
 
+const refField = Symbol("ref");
+const unregisterField = Symbol("unregister");
+
 export class Document<T> {
   data: null | T = null;
-  ref: firestore.DocumentReference;
+  [refField]: firestore.DocumentReference;
   editing: null | Partial<T> = null;
-  unregister: () => void;
+  [unregisterField]: () => void;
   id: string;
   constructor(ref: firestore.DocumentReference) {
-    this.ref = ref;
     this.id = ref.id;
-    this.unregister = ref.onSnapshot((snapshot: firestore.DocumentSnapshot) => {
-      this.data = (snapshot.data() || null) as T;
-      console.log("snapshot", this.data);
-    });
+    this[unregisterField] = ref.onSnapshot(
+      (snapshot: firestore.DocumentSnapshot) => {
+        this.data = (snapshot.data() || null) as T;
+        console.log("snapshot", this.data);
+      }
+    );
+    this[refField] = ref;
     Vue.observable(this);
   }
   close() {
-    this.unregister();
+    this[unregisterField]();
   }
   async remove() {
     const response = await confirm({
@@ -26,7 +31,7 @@ export class Document<T> {
       text: "Are you sure to delete?"
     });
     if (response) {
-      this.ref?.delete();
+      this[refField]?.delete();
     }
   }
   async save() {
@@ -35,7 +40,7 @@ export class Document<T> {
       text: "Are you sure to save?"
     });
     if (response) {
-      await this.ref?.update({
+      await this[refField]?.update({
         ...this.editing,
         updateTime: Date.now()
       });

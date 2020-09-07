@@ -1,32 +1,36 @@
 <template>
   <tr>
-    <td>{{ document.id }}</td>
+    <td>{{ documentId }}</td>
     <td>
-      {{ dayjs(effectiveDocument.updateTime).format("YYYY-MM-DD HH:mm:ss") }}
+      {{ formatDate(effectiveDocument.updateTime) }}
     </td>
     <td>
       <input
-        :class="editingDocument && editingDocument.title && 'isEditing'"
+        :class="document.editing && document.editing.title && 'isEditing'"
         :value="effectiveDocument.title"
-        @input="update('title', $event.target.value)"
+        @input="document.update('title', $event.target.value)"
       />
     </td>
     <td>
       <input
-        :class="editingDocument && editingDocument.text && 'isEditing'"
+        :class="document.editing && document.editing.text && 'isEditing'"
         :value="effectiveDocument.text"
-        @input="update('text', $event.target.value)"
+        @input="document.update('text', $event.target.value)"
       />
     </td>
 
     <td>
-      <button type="button" class="btn btn-primary" @click="save()">
+      <button type="button" class="btn btn-primary" @click="document.save()">
         Save
       </button>
-      <button type="button" class="btn btn-danger" @click="remove()">
+      <button type="button" class="btn btn-danger" @click="document.remove()">
         Delete
       </button>
-      <button type="button" class="btn btn-secondary" @click="discard()">
+      <button
+        type="button"
+        class="btn btn-secondary"
+        @click="document.discard()"
+      >
         Discard
       </button>
       <button
@@ -47,65 +51,39 @@ import Vue from "vue";
 import { firestore } from "firebase/app";
 import dayjs from "dayjs";
 import { Sample } from "@/models/sample";
-import { confirm } from "@/services/dialog";
+import { Document } from "@/stores/document";
 
 export default Vue.extend({
   name: "SampleListItem",
   components: {},
   props: {
-    document: Object as Vue.PropType<Sample>,
+    documentId: String as Vue.PropType<string>,
     collection: Object as Vue.PropType<firestore.CollectionReference>
   },
   data() {
-    return {
-      editingDocument: null as null | Sample,
-      dayjs
-    };
+    return {};
+  },
+  created() {
+    console.log("created", this);
+  },
+  beforeDestroy() {
+    console.log("beforeDestroy");
+    this.document?.close();
+    // no effect
+    // this.document = null;
   },
   computed: {
     effectiveDocument(): Sample {
-      return { ...this.document, ...this.editingDocument };
+      return { ...this.document?.data, ...this.document?.editing };
+    },
+    document(): Document<Sample> {
+      console.log("document updated");
+      return new Document<Sample>(this.collection.doc(this.documentId));
     }
   },
   methods: {
-    async remove() {
-      const response = await confirm({
-        title: "Confirm",
-        text: "Are you sure to delete?"
-      });
-      if (response) {
-        this.collection.doc(this.document?.id).delete();
-      }
-    },
-    async save() {
-      const response = await confirm({
-        title: "Confirm",
-        text: "Are you sure to save?"
-      });
-      if (response) {
-        this.collection
-          .doc(this.document?.id)
-          .update({ ...this.editingDocument, updateTime: Date.now() });
-        this.editingDocument = null;
-      }
-    },
-    async discard() {
-      const response = await confirm({
-        title: "Confirm",
-        text: "Are you sure to discard?"
-      });
-      if (response) {
-        this.editingDocument = null;
-      }
-    },
-    edited(fieldName: keyof Sample) {
-      return this.editingDocument?.[fieldName];
-    },
-    update(fieldName: keyof Sample, value: number | string) {
-      if (!this.editingDocument) {
-        this.editingDocument = {};
-      }
-      Vue.set(this.editingDocument, fieldName, value);
+    formatDate(timestamp: number) {
+      return dayjs(timestamp).format("YYYY-MM-DD HH:mm:ss");
     }
   }
 });

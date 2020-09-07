@@ -20,16 +20,16 @@
       </thead>
       <tbody>
         <SampleListItem
-          v-for="document in documents"
-          :key="document.id + '#'"
-          :document="document"
-          :collection="collection"
+          v-for="item in list.items"
+          :key="item.id + '#'"
+          :documentId="item.id"
+          :collection="list.ref"
         />
       </tbody>
     </table>
 
     <div style="margin: 10px">
-      <button type="button" class="btn btn-secondary" @click="add()">
+      <button type="button" class="btn btn-secondary" @click="list.add()">
         Add
       </button>
     </div>
@@ -40,11 +40,13 @@
 import Vue from "vue";
 import firebase from "firebase/app";
 import firebaseProject from "@/common/firebaseProject";
-import documentId from "@/common/documentId";
 import SampleListItem from "@/views/SampleListItem.vue";
+import { List } from "@/stores/list";
 
 const db = firebaseProject.firestore();
 const collection = db.collection("publicDocuments");
+
+const list = new List(collection);
 
 console.log(firebase.firestore.Timestamp);
 export default Vue.extend({
@@ -52,21 +54,10 @@ export default Vue.extend({
   components: { SampleListItem },
   data() {
     return {
-      documents: [],
-      collection
+      list
     };
   },
-  methods: {
-    add: function() {
-      collection.doc(documentId()).set({
-        updateTime: Date.now()
-        // timestemp: firebase.firestore.FieldValue.serverTimestamp()
-      });
-    }
-  },
-  firestore: {
-    documents: collection
-  }
+  methods: {}
 });
 </script>
 <style lang="scss" scoped>
