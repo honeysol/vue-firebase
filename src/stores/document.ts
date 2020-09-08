@@ -2,6 +2,7 @@ import Vue from "vue";
 import { firestore } from "firebase/app";
 import { confirm } from "@/services/dialog";
 
+// use Symbol to avoid Vue observation
 const refField = Symbol("ref");
 const unregisterField = Symbol("unregister");
 

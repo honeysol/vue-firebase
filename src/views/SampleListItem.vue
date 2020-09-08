@@ -52,25 +52,14 @@ import { firestore } from "firebase/app";
 import dayjs from "dayjs";
 import { Sample } from "@/models/sample";
 import { Document } from "@/stores/document";
+import { autoclose } from "@/mixins/autoclose";
 
 export default Vue.extend({
   name: "SampleListItem",
-  components: {},
+  mixins: [autoclose],
   props: {
     documentId: String as Vue.PropType<string>,
     collection: Object as Vue.PropType<firestore.CollectionReference>
-  },
-  data() {
-    return {};
-  },
-  created() {
-    console.log("created", this);
-  },
-  beforeDestroy() {
-    console.log("beforeDestroy");
-    this.document?.close();
-    // no effect
-    // this.document = null;
   },
   computed: {
     document(): Document<Sample> {
@@ -78,16 +67,12 @@ export default Vue.extend({
       return new Document<Sample>(this.collection.doc(this.documentId));
     }
   },
-  watch: {
-    document(document, oldDocument) {
-      oldDocument?.close();
-    }
-  },
   methods: {
     formatDate(timestamp: number) {
       return dayjs(timestamp).format("YYYY-MM-DD HH:mm:ss");
     }
-  }
+  },
+  autoclose: ["document"]
 });
 </script>
 <style lang="scss" scoped>

@@ -62,41 +62,30 @@
 import Vue from "vue";
 import dayjs from "dayjs";
 import firebaseProject from "@/common/firebaseProject";
-const db = firebaseProject.firestore();
-const collection = db.collection("publicDocuments");
 import { Sample } from "@/models/sample";
 import { Document } from "@/stores/document";
+import { autoclose } from "@/mixins/autoclose";
+const db = firebaseProject.firestore();
+const collection = db.collection("publicDocuments");
 
 export default Vue.extend({
   name: "SampleItem",
-  components: {},
-  props: {},
-  data() {
-    return {};
-  },
-  beforeDestroy() {
-    this.document?.close();
-    // no effect
-    // this.document = null;
-  },
+  mixins: [autoclose],
   computed: {
     document(): Document<Sample> | null {
-      console.log("document updated", this.$route.params.id);
-      return this.$route.params.id
-        ? new Document<Sample>(collection.doc(this.$route.params.id))
+      const documentId = this.$route.params.id || undefined;
+      console.log("document updated", documentId);
+      return documentId
+        ? new Document<Sample>(collection.doc(documentId))
         : null;
-    }
-  },
-  watch: {
-    document(document, oldDocument) {
-      oldDocument?.close();
     }
   },
   methods: {
     formatDate(timestamp: number) {
       return dayjs(timestamp).format("YYYY-MM-DD HH:mm:ss");
     }
-  }
+  },
+  autoclose: ["document"]
 });
 </script>
 <style lang="scss" scoped>

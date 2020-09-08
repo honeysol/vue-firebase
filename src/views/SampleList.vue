@@ -38,26 +38,24 @@
 
 <script lang="ts">
 import Vue from "vue";
-import firebase from "firebase/app";
 import firebaseProject from "@/common/firebaseProject";
 import SampleListItem from "@/views/SampleListItem.vue";
 import { List } from "@/stores/list";
+import { autoclose } from "@/mixins/autoclose";
 
 const db = firebaseProject.firestore();
 const collection = db.collection("publicDocuments");
 
-const list = new List(collection);
-
-console.log(firebase.firestore.Timestamp);
 export default Vue.extend({
   name: "Home",
+  mixins: [autoclose],
   components: { SampleListItem },
-  data() {
-    return {
-      list
-    };
+  computed: {
+    list() {
+      return new List(collection);
+    }
   },
-  methods: {}
+  autoclose: ["list"]
 });
 </script>
 <style lang="scss" scoped>
