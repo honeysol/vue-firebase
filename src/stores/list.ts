@@ -10,41 +10,18 @@ interface DocData<T> {
   id: string;
   document: T;
 }
-
-const toDocData = <T>(doc: firestore.QueryDocumentSnapshot): DocData<T> => ({
-  document: doc.data() as T,
-  id: doc.id
-});
-
 export class List<T> {
-  items: null | DocData<T>[] = [];
+  items: null | DocData<T>[] = null;
   [refField]: firestore.CollectionReference;
   [unregisterField]: () => void;
   constructor(ref: firestore.CollectionReference) {
     this[refField] = ref;
     this[unregisterField] = ref.onSnapshot(
       (snapshot: firestore.QuerySnapshot) => {
-        for (const docChange of snapshot.docChanges()) {
-          if (docChange.type === "added") {
-            if (docChange.oldIndex === -1) {
-              this.items?.push(toDocData<T>(docChange.doc));
-            } else {
-              this.items?.splice(
-                docChange.oldIndex,
-                0,
-                toDocData<T>(docChange.doc)
-              );
-            }
-          } else if (docChange.type === "modified") {
-            this.items?.splice(
-              docChange.oldIndex,
-              1,
-              toDocData<T>(docChange.doc)
-            );
-          } else if (docChange.type === "removed") {
-            this.items?.splice(docChange.oldIndex, 1);
-          }
-        }
+        this.items = (snapshot.docs || []).map(doc => ({
+          document: doc.data() as T,
+          id: doc.id
+        }));
         console.log("snapshot", this.items);
       }
     );
