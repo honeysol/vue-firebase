@@ -13,13 +13,13 @@
 import Vue from "vue";
 import modalService from "./index";
 
-interface ModalParam {
+interface ModalParam<P, V> {
   component: typeof Vue;
-  props: any;
-  onClose: (result: any) => void;
+  props: P;
+  onClose: (result: V) => void;
 }
-
-type modalCallback = (result: any) => void;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type ModalParamAny = ModalParam<any, any>;
 
 export default Vue.extend({
   name: "Modal",
@@ -28,23 +28,23 @@ export default Vue.extend({
   },
   data() {
     return {
-      modals: [] as Array<ModalParam>
+      modals: [] as Array<ModalParamAny>
     };
   },
   methods: {
-    add<T>({
+    add<P, V>({
       props,
       callback,
       component
     }: {
-      props: any;
-      callback: (result: T | null) => void;
+      props: P;
+      callback: (result: V | null) => void;
       component: typeof Vue;
     }): void {
       const modalParam = {
         component,
         props,
-        onClose: (result: T | null) => {
+        onClose: (result: V | null) => {
           this.modals = this.modals.filter(modal => modal !== modalParam);
           callback(result);
         }

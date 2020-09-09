@@ -1,15 +1,15 @@
 import firebaseProject from "@/common/firebaseProject";
-import { getErrorMessage } from "@/common/firebaseErrorMessage";
+import { getErrorMessage, FirebaseError } from "@/common/firebaseErrorMessage";
 import firebase from "firebase/app";
 import Vue from "vue";
 
-const getErrorResponse = (error: any): AuthenticationReponse => {
+const getErrorResponse = (error: FirebaseError): AuthenticationReponse => {
   return { status: "error", error, errorMessage: getErrorMessage(error) };
 };
 
 interface AuthenticationReponse {
   status: "error" | "successed" | "requireMailAuth";
-  error?: any;
+  error?: Error;
   errorMessage?: string;
 }
 

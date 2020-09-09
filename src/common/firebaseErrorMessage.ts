@@ -1,4 +1,6 @@
-const errorMessages: any = {
+type ErrorMessages = Record<string, Record<string, string>>;
+
+const errorMessages: ErrorMessages = {
   ja: {
     "auth/invalid-email": "メールアドレスの形式が間違っています",
     "auth/user-disabled": "このユーザは無効化されています",
@@ -7,6 +9,10 @@ const errorMessages: any = {
   }
 };
 
-export const getErrorMessage = (error: any, lang = "ja") => {
-  return errorMessages[lang][error.code] || error.message;
+export interface FirebaseError extends Error {
+  code: string;
+}
+
+export const getErrorMessage = (error: FirebaseError, lang = "ja") => {
+  return errorMessages[lang]?.[error.code] || error.message;
 };

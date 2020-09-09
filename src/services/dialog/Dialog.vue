@@ -59,7 +59,7 @@ export default Vue.extend({
   props: {
     title: String,
     text: String,
-    buttons: Array as Vue.PropType<ButtonParams<any>[]>
+    buttons: Array as Vue.PropType<ButtonParams<unknown>[]>
   },
   data() {
     return {
@@ -67,7 +67,7 @@ export default Vue.extend({
     };
   },
   methods: {
-    async close(value: any) {
+    async close(value: unknown) {
       this.show = false;
       await wait(150);
       this.$emit("close", value);

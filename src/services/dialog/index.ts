@@ -1,23 +1,28 @@
 import Dialog from "./Dialog.vue";
 
-export interface ButtonParams<T> {
+export interface ButtonParams<V> {
   title: string;
   class: string;
-  value: T;
+  value: V;
+}
+interface DialogProps<V> {
+  title: string;
+  text: string;
+  buttons: ButtonParams<V>[];
 }
 
 import modalService from "@/services/modal";
 
-const openDialog = <T>({
+const openDialog = <V>({
   title,
   text,
   buttons
 }: {
   title: string;
   text: string;
-  buttons: Array<ButtonParams<T>>;
-}): Promise<T | null> => {
-  return modalService.openModal<T>({
+  buttons: Array<ButtonParams<V>>;
+}): Promise<V | null> => {
+  return modalService.openModal<DialogProps<V>, V>({
     props: {
       title,
       text,
@@ -34,14 +39,14 @@ export const alert = async ({
   title: string;
   text: string;
 }) => {
-  const response = await openDialog<true>({
+  const response = await openDialog({
     title,
     text,
     buttons: [
       {
         title: "OK",
         class: "btn-primary",
-        value: true
+        value: true as true
       }
     ]
   });
@@ -54,8 +59,8 @@ export const confirm = async ({
 }: {
   title: string;
   text: string;
-}): Promise<boolean | null> => {
-  const response = await openDialog<boolean>({
+}) => {
+  const response = await openDialog({
     title,
     text,
     buttons: [
