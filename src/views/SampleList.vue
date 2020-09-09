@@ -1,37 +1,42 @@
 <template>
-  <div class="componentRoot">
-    <table class="table">
-      <thead class="thead-light">
-        <tr>
-          <th>
-            ID
-          </th>
-          <th>
-            Update Time
-          </th>
-          <th>
-            Title
-          </th>
-          <th>
-            Text
-          </th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>
-        <SampleListItem
-          v-for="item in list.items"
-          :key="item.id + '#'"
-          :documentId="item.id"
-          :collection="list.ref"
-        />
-      </tbody>
-    </table>
+  <div>
+    <div class="mainHeader">Sample</div>
+    <div class="mainContent" v-if="list.items">
+      <div class="tableWrapper">
+        <table class="table">
+          <thead class="thead-light">
+            <tr>
+              <th>
+                ID
+              </th>
+              <th>
+                Update Time
+              </th>
+              <th>
+                Title
+              </th>
+              <th>
+                Text
+              </th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <SampleListItem
+              v-for="item in list.items"
+              :key="item.id + '#'"
+              :documentId="item.id"
+              :collection="list.ref"
+            />
+          </tbody>
+        </table>
+      </div>
 
-    <div style="margin: 10px">
-      <button type="button" class="btn btn-secondary" @click="list.add()">
-        Add
-      </button>
+      <div style="margin: 10px">
+        <button type="button" class="btn btn-secondary" @click="list.add()">
+          Add
+        </button>
+      </div>
     </div>
   </div>
 </template>
@@ -65,8 +70,7 @@ table {
     padding: 0.4rem 0.2rem;
   }
 }
-.componentRoot {
-  margin: 10px;
+.tableWrapper {
   overflow-x: auto;
   white-space: nowrap;
 }

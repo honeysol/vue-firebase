@@ -45,10 +45,9 @@
 <script lang="ts">
 import Vue from "vue";
 import { ButtonParams } from "./index";
+import { wait } from "@/common/util";
 
 type milisecond = number;
-const wait = (time: milisecond) =>
-  new Promise(resolve => setTimeout(() => resolve(), time));
 
 export default Vue.extend({
   name: "Dialog",

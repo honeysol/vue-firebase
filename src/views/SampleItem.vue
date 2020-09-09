@@ -1,60 +1,63 @@
 <template>
-  <div class="componentRoot">
-    <form>
-      <div class="form-group">
-        <label>ID</label>
-        <input class="form-control" readonly :value="document.id" />
-      </div>
-      <div class="form-group">
-        <label>Update Time</label>
-        <input
-          class="form-control"
-          readonly
-          :value="
-            document.effective.updateTime &&
-              formatDate(document.effective.updateTime)
-          "
-        />
-      </div>
-      <div class="form-group">
-        <label>Title</label>
-        <input
-          class="form-control"
-          :class="document.editing && document.editing.title && 'isEditing'"
-          :value="document.effective.title"
-          @input="document.update('title', $event.target.value)"
-        />
-      </div>
-      <div class="form-group">
-        <label>Text</label>
-        <input
-          class="form-control"
-          :class="document.editing && document.editing.text && 'isEditing'"
-          :value="document.effective.text"
-          @input="document.update('text', $event.target.value)"
-        />
-      </div>
-      <button type="button" class="btn btn-primary" @click="document.save()">
-        Save
-      </button>
-      <button type="button" class="btn btn-danger" @click="document.remove()">
-        Delete
-      </button>
-      <button
-        type="button"
-        class="btn btn-secondary"
-        @click="document.discard()"
-      >
-        Discard
-      </button>
-      <button
-        type="button"
-        class="btn btn-secondary"
-        @click="$router.push({ name: 'SampleList' })"
-      >
-        Cancel
-      </button>
-    </form>
+  <div>
+    <div class="mainHeader">Sample</div>
+    <div class="mainContent">
+      <form>
+        <div class="form-group">
+          <label>ID</label>
+          <input class="form-control" readonly :value="document.id" />
+        </div>
+        <div class="form-group">
+          <label>Update Time</label>
+          <input
+            class="form-control"
+            readonly
+            :value="
+              document.effective.updateTime &&
+                formatDate(document.effective.updateTime)
+            "
+          />
+        </div>
+        <div class="form-group">
+          <label>Title</label>
+          <input
+            class="form-control"
+            :class="document.editing && document.editing.title && 'isEditing'"
+            :value="document.effective.title"
+            @input="document.update('title', $event.target.value)"
+          />
+        </div>
+        <div class="form-group">
+          <label>Text</label>
+          <input
+            class="form-control"
+            :class="document.editing && document.editing.text && 'isEditing'"
+            :value="document.effective.text"
+            @input="document.update('text', $event.target.value)"
+          />
+        </div>
+        <button type="button" class="btn btn-primary" @click="document.save()">
+          Save
+        </button>
+        <button type="button" class="btn btn-danger" @click="document.remove()">
+          Delete
+        </button>
+        <button
+          type="button"
+          class="btn btn-secondary"
+          @click="document.discard()"
+        >
+          Discard
+        </button>
+        <button
+          type="button"
+          class="btn btn-secondary"
+          @click="$router.push({ name: 'SampleList' })"
+        >
+          Cancel
+        </button>
+      </form>
+    </div>
   </div>
 </template>
 
@@ -95,7 +98,7 @@ export default Vue.extend({
 .btn {
   margin: 4px;
 }
-.componentRoot {
+form {
   margin: 10px;
   max-width: 400px;
 }

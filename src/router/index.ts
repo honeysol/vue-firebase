@@ -1,60 +1,78 @@
 import Vue from "vue";
 import VueRouter, { RouteConfig } from "vue-router";
-import Home from "@/views/Home.vue";
-import SampleList from "@/views/SampleList.vue";
-import SampleItem from "@/views/SampleItem.vue";
+import authentication from "@/stores/authentication";
 
 Vue.use(VueRouter);
 
 const routes: Array<RouteConfig> = [
   {
     path: "/",
-    // name: "Home",
     redirect: _to => {
-      return "/signIn";
+      return "/about";
     }
   },
   {
-    path: "/about",
-    name: "About",
+    path: "/main",
+    name: "Main",
+    component: () => import(/* webpackChunkName: "main" */ "../views/Main.vue"),
+    meta: { requiresAuth: true },
+    children: [
+      {
+        path: "/sample/:id",
+        name: "SampleItem",
+        component: () =>
+          import(/* webpackChunkName: "main" */ "../views/SampleItem.vue")
+      },
+      {
+        path: "/sample",
+        name: "SampleList",
+        component: () =>
+          import(/* webpackChunkName: "main" */ "../views/SampleList.vue")
+      },
+      {
+        path: "/about",
+        name: "About",
+        component: () =>
+          import(/* webpackChunkName: "main" */ "../views/About.vue")
+      }
+    ]
+  },
+
+  {
+    path: "/initializing",
+    name: "Initializing",
     component: () =>
-      import(/* webpackChunkName: "about" */ "../views/About.vue")
+      import(/* webpackChunkName: "auth" */ "@/views/auth/Initializing.vue")
+  },
+  {
+    path: "/signOut",
+    name: "SignOut",
+    component: () =>
+      import(/* webpackChunkName: "auth" */ "@/views/auth/SignOut.vue")
   },
   {
     path: "/signIn",
     name: "SignIn",
     component: () =>
-      import(/* webpackChunkName: "signIn" */ "@/views/auth/SignIn.vue")
+      import(/* webpackChunkName: "auth" */ "@/views/auth/SignIn.vue")
   },
   {
     path: "/signUp",
     name: "SignUp",
     component: () =>
-      import(/* webpackChunkName: "signUp" */ "@/views/auth/SignUp.vue")
+      import(/* webpackChunkName: "auth" */ "@/views/auth/SignUp.vue")
   },
   {
     path: "/mailAuth",
     name: "MailAuth",
     component: () =>
-      import(/* webpackChunkName: "mailAuth" */ "@/views/auth/MailAuth.vue")
+      import(/* webpackChunkName: "auth" */ "@/views/auth/MailAuth.vue")
   },
   {
     path: "/passwordReset",
     name: "PasswordReset",
     component: () =>
-      import(
-        /* webpackChunkName: "passwordReset" */ "@/views/auth/PasswordReset.vue"
-      )
-  },
-  {
-    path: "/sample/:id",
-    name: "SampleItem",
-    component: SampleItem
-  },
-  {
-    path: "/sample",
-    name: "SampleList",
-    component: SampleList
+      import(/* webpackChunkName: "auth" */ "@/views/auth/PasswordReset.vue")
   }
 ];
 
@@ -62,6 +80,17 @@ const router = new VueRouter({
   mode: "history",
   base: process.env.BASE_URL,
   routes
+});
+
+router.beforeEach((to, from, next) => {
+  if (
+    to.matched.some(record => record.meta.requiresAuth) &&
+    authentication.status !== "member"
+  ) {
+    next({ path: "/initializing", query: { redirect: to.fullPath } });
+  } else {
+    next();
+  }
 });
 
 export default router;

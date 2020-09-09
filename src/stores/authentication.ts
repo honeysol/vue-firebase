@@ -7,35 +7,42 @@ const getErrorResponse = (error: FirebaseError): AuthenticationReponse => {
   return { status: "error", error, errorMessage: getErrorMessage(error) };
 };
 
+type AuthenticationReponseStatus = "error" | "successed" | "requireMailAuth";
+type AuthenticationStatus = "initializing" | "member" | "guest";
+type ResolvedAuthenticationStatus = "member" | "guest";
+
 interface AuthenticationReponse {
-  status: "error" | "successed" | "requireMailAuth";
+  status: AuthenticationReponseStatus;
   error?: Error;
   errorMessage?: string;
 }
 
 class Authentication {
-  isInitializing = true;
+  isLoading = true;
   user: null | firebase.User = null;
   userCredential: null | firebase.auth.UserCredential = null;
   ready = this.init();
 
-  get status() {
-    if (this.isInitializing) {
+  get status(): AuthenticationStatus {
+    if (this.isLoading) {
       return "initializing";
     } else {
       return this.user ? "member" : "guest";
     }
   }
 
-  async getStatus(): Promise<string> {
+  async getStatus(): Promise<ResolvedAuthenticationStatus> {
     await this.ready;
+    if (this.status === "initializing") {
+      throw new Error("Inner error");
+    }
     return this.status;
   }
   async init(): Promise<void> {
     return await new Promise<void>(resolve => {
       const handler = (user: firebase.User | null) => {
         this.user = user;
-        this.isInitializing = false;
+        this.isLoading = false;
         // eslint-disable-next-line @typescript-eslint/no-use-before-define
         unsubscribe();
         resolve();
@@ -161,7 +168,6 @@ class Authentication {
     return { status: "error" };
   }
   async signOut(): Promise<AuthenticationReponse> {
-    await this.ready;
     try {
       await firebaseProject.auth().signOut();
       this.user = null;

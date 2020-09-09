@@ -55,7 +55,6 @@ export default Vue.extend({
   computed: {},
   methods: {
     async signUp() {
-      console.log(this.document);
       if (this.document.email) {
         const response = await this.authentication.signUp({
           email: this.document.email

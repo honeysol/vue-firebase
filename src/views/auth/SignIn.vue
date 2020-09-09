@@ -64,10 +64,10 @@ export default Vue.extend({
           email: this.document.email,
           password: this.document.password
         });
-
-        console.log("response", response);
         if (response.status === "successed") {
-          this.$router.push({ name: "SampleList" });
+          this.$router.push({
+            path: (this.$route.query.redirect as string) || "/"
+          });
         } else {
           this.errorMessage = response.errorMessage;
         }
