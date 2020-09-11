@@ -26,14 +26,18 @@
               v-for="item in list.items"
               :key="item.id + '#'"
               :documentId="item.id"
-              :list="list"
+              :collection="collection"
             />
           </tbody>
         </table>
       </div>
 
       <div style="margin: 10px">
-        <button type="button" class="btn btn-secondary" @click="list.add()">
+        <button
+          type="button"
+          class="btn btn-secondary"
+          @click="collection.add()"
+        >
           Add(inline)
         </button>
         <button
@@ -52,20 +56,30 @@
 import Vue from "vue";
 import firebaseProject from "@/common/firebaseProject";
 import SampleListItem from "@/views/SampleListItem.vue";
-import { List } from "@/stores/list";
+import { Collection } from "@/stores/collection";
 import { autoclose } from "@/mixins/autoclose";
 
 const db = firebaseProject.firestore();
-const collection = db.collection("publicDocuments");
+const collection = new Collection(db.collection("publicDocuments"));
 
 export default Vue.extend({
   name: "Home",
   mixins: [autoclose],
   components: { SampleListItem },
-  computed: {
-    list() {
-      return new List(collection);
-    }
+  data() {
+    return {
+      list: collection.query({
+        // You can use firestore operator ["<=", "array-contains", "in"]
+        // and corresponding mongo-like operator [$gte, $in, $elementMatch]
+        //
+        // filter: { title: "aaa" },
+        // filter: { text: "fff" },
+        // documentId: { $gt: "1747b2878c1d5e466a950839265" },
+        // limit: 1,
+        // limitToLast: 3
+      }),
+      collection
+    };
   },
   autoclose: ["list"]
 });

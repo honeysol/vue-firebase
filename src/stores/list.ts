@@ -1,13 +1,12 @@
 import Vue from "vue";
 import { firestore } from "firebase/app";
-import { generateDocumentId } from "@/common/generateDocumentId";
-import { Document, DocumentOptions } from "./document";
+import { deriveQuery, deriveQueryParams } from "./queryUtil";
 
 // use Symbol to avoid Vue observation
 const refField = Symbol("ref");
 const unregisterField = Symbol("unregister");
 
-interface ListOptions {
+export interface ListOptions {
   listen?: boolean;
 }
 
@@ -18,9 +17,9 @@ interface DocData<T> {
 export class List<T> {
   items: null | DocData<T>[] = null;
   options: ListOptions | null = null;
-  [refField]: firestore.CollectionReference<T>;
+  [refField]: firestore.Query<T>;
   [unregisterField]: () => void;
-  constructor(ref: firestore.CollectionReference<T>, options?: ListOptions) {
+  constructor(ref: firestore.Query<T>, options?: ListOptions) {
     this.options = options || null;
     this[refField] = ref;
     if (this.options?.listen !== false) {
@@ -39,26 +38,10 @@ export class List<T> {
   get ref() {
     return this[refField];
   }
-  doc(
-    documentId: string | null | undefined,
-    options?: DocumentOptions<T> & { defaultValue?: T }
-  ): Document<T> {
-    return new Document<T>(
-      documentId
-        ? { ref: this.ref.doc(documentId) }
-        : {
-            producer: () => this.ref.doc(generateDocumentId()),
-            defaultValue: options?.defaultValue
-          },
-      options
-    );
+  query(params: deriveQueryParams) {
+    return new List(deriveQuery({ ...params, query: this.ref }));
   }
   close() {
     this[unregisterField]();
-  }
-  add() {
-    this[refField].doc(generateDocumentId()).set(({
-      updateTime: Date.now()
-    } as unknown) as T);
   }
 }

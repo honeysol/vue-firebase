@@ -59,11 +59,10 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { firestore } from "firebase/app";
 import dayjs from "dayjs";
 import { Sample } from "@/models/sample";
 import { Document } from "@/stores/document";
-import { List } from "@/stores/list";
+import { Collection } from "@/stores/collection";
 import { autoclose } from "@/mixins/autoclose";
 
 export default Vue.extend({
@@ -71,11 +70,11 @@ export default Vue.extend({
   mixins: [autoclose],
   props: {
     documentId: String as Vue.PropType<string>,
-    list: Object as Vue.PropType<List<Sample>>
+    collection: Object as Vue.PropType<Collection<Sample>>
   },
   computed: {
     document(): Document<Sample> {
-      return this.list.doc(this.documentId);
+      return this.collection.doc(this.documentId);
     }
   },
   methods: {

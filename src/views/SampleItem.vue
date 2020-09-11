@@ -77,12 +77,10 @@ import Vue from "vue";
 import dayjs from "dayjs";
 import firebaseProject from "@/common/firebaseProject";
 import { Sample } from "@/models/sample";
-import { List } from "@/stores/list";
+import { Collection } from "@/stores/collection";
 import { autoclose } from "@/mixins/autoclose";
 const db = firebaseProject.firestore();
-const list = new List<Sample>(db.collection("publicDocuments"), {
-  listen: false
-});
+const collection = new Collection<Sample>(db.collection("publicDocuments"));
 
 export default Vue.extend({
   name: "SampleItem",
@@ -93,7 +91,7 @@ export default Vue.extend({
   computed: {
     document() {
       const documentId = this.$route.params.id;
-      return list.doc(documentId, {
+      return collection.doc(documentId, {
         defaultValue: { text: "default sample" },
         afterSave: ({ newId }) => {
           if (newId) {
