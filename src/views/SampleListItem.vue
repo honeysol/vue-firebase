@@ -6,16 +6,14 @@
     </td>
     <td>
       <input
-        :class="document.editing && document.editing.title && 'isEditing'"
-        :value="document.effective.title"
-        @input="document.update('title', $event.target.value)"
+        :class="document.edited('title') && 'isEditing'"
+        v-model="document.effective.title"
       />
     </td>
     <td>
       <input
-        :class="document.editing && document.editing.text && 'isEditing'"
-        :value="document.effective.text"
-        @input="document.update('text', $event.target.value)"
+        :class="document.edited('text') && 'isEditing'"
+        v-model="document.effective.text"
       />
     </td>
 

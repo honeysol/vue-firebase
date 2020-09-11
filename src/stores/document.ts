@@ -6,6 +6,7 @@ import { confirm, alert } from "@/services/dialog";
 const refField = Symbol("ref");
 const producerField = Symbol("producer");
 const unregisterField = Symbol("unregister");
+const effectiveField = Symbol("effective");
 
 export type documentReferenceProducer<T> = () => firestore.DocumentReference<T>;
 
@@ -34,7 +35,7 @@ export class Document<T> {
   data: null | Partial<T> = null;
   exists: boolean | null = null;
   editing: null | Partial<T> = null;
-  effective: Partial<T> = {};
+  [effectiveField]: Partial<T>;
   options: DocumentOptions<T> | null = null;
   [refField]: firestore.DocumentReference<T> | null = null;
   [producerField]: documentReferenceProducer<T> | null = null;
@@ -51,8 +52,32 @@ export class Document<T> {
       const { producer, defaultValue } = params as DocumentCreateParams<T>;
       this[producerField] = producer;
       this.data = defaultValue || null;
-      this.updateEffective();
     }
+    this[effectiveField] = new Proxy(Object.create(null), {
+      get: (_target, key: string | number | symbol) => {
+        const _key = key as keyof T;
+        return this.editing && Object.hasOwnProperty.call(this.editing, _key)
+          ? this.editing[_key]
+          : this.data?.[_key];
+      },
+      set: (_target, key, value): boolean => {
+        const _key = key as keyof T & (number | string);
+        if (!this.editing) {
+          this.editing = Object.create(null) as Partial<T>;
+        }
+        Vue.set(this.editing, _key, value);
+        return true;
+      },
+      has: (target, key: string | number | symbol): boolean => {
+        const _key = key as keyof T;
+        return (
+          (this.editing && Object.hasOwnProperty.call(this.editing, _key)) ||
+          (this.data && Object.hasOwnProperty.call(this.data, _key)) ||
+          false
+        );
+      }
+    }) as Partial<T>;
+    // console.log(this[effectiveField]);
     Vue.observable(this);
   }
   set ref(ref: firestore.DocumentReference<T> | null) {
@@ -63,7 +88,6 @@ export class Document<T> {
       this[unregisterField] = ref.onSnapshot(snapshot => {
         this.data = snapshot.data() || null;
         this.exists = snapshot.exists;
-        this.updateEffective();
         console.log("snapshot", this.data);
       });
     } else {
@@ -74,6 +98,9 @@ export class Document<T> {
   }
   get ref() {
     return this[refField];
+  }
+  get effective() {
+    return this[effectiveField];
   }
   get id() {
     return this.ref?.id;
@@ -152,7 +179,6 @@ export class Document<T> {
         }
       }
       this.editing = null;
-      this.updateEffective();
       this.options?.afterSave?.({ newId: isCreate ? this.ref.id : null });
     }
   }
@@ -166,20 +192,15 @@ export class Document<T> {
     });
     if (response) {
       this.editing = null;
-      this.updateEffective();
     }
   }
-  edited(fieldName: keyof T) {
-    return this.editing?.[fieldName];
-  }
-  update<S extends keyof T & (string | number)>(fieldName: S, value: T[S]) {
-    if (!this.editing) {
-      this.editing = {};
+  edited(fieldName?: keyof T) {
+    if (fieldName) {
+      return (
+        this.editing && Object.hasOwnProperty.call(this.editing, fieldName)
+      );
+    } else {
+      return this.editing !== null;
     }
-    Vue.set(this.editing, fieldName, value);
-    this.updateEffective();
-  }
-  updateEffective() {
-    this.effective = { ...this.data, ...this.editing };
   }
 }

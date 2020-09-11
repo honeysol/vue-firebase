@@ -22,18 +22,16 @@
           <label>Title</label>
           <input
             class="form-control"
-            :class="document.editing && document.editing.title && 'isEditing'"
-            :value="document.effective.title"
-            @input="document.update('title', $event.target.value)"
+            :class="document.edited('title') && 'isEditing'"
+            v-model="document.effective.title"
           />
         </div>
         <div class="form-group">
           <label>Text</label>
           <input
             class="form-control"
-            :class="document.editing && document.editing.text && 'isEditing'"
-            :value="document.effective.text"
-            @input="document.update('text', $event.target.value)"
+            :class="document.edited('text') && 'isEditing'"
+            v-model="document.effective.text"
           />
         </div>
         <button
