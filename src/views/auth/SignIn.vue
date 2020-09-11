@@ -65,7 +65,7 @@ export default Vue.extend({
           password: this.document.password
         });
         if (response.status === "successed") {
-          this.$router.push({
+          this.$router.replace({
             path: (this.$route.query.redirect as string) || "/"
           });
         } else {

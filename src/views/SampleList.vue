@@ -26,7 +26,7 @@
               v-for="item in list.items"
               :key="item.id + '#'"
               :documentId="item.id"
-              :collection="list.ref"
+              :list="list"
             />
           </tbody>
         </table>
@@ -34,7 +34,14 @@
 
       <div style="margin: 10px">
         <button type="button" class="btn btn-secondary" @click="list.add()">
-          Add
+          Add(inline)
+        </button>
+        <button
+          type="button"
+          class="btn btn-secondary"
+          @click="$router.push({ name: 'SampleItem' })"
+        >
+          New
         </button>
       </div>
     </div>
@@ -64,12 +71,6 @@ export default Vue.extend({
 });
 </script>
 <style lang="scss" scoped>
-table {
-  td,
-  th {
-    padding: 0.4rem 0.2rem;
-  }
-}
 .tableWrapper {
   overflow-x: auto;
   white-space: nowrap;

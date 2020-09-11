@@ -36,13 +36,16 @@
             @input="document.update('text', $event.target.value)"
           />
         </div>
-        <button type="button" class="btn btn-primary" @click="document.save()">
+        <button
+          :disabled="!document.canSave"
+          type="button"
+          class="btn btn-primary"
+          @click="document.save()"
+        >
           Save
         </button>
-        <button type="button" class="btn btn-danger" @click="document.remove()">
-          Delete
-        </button>
         <button
+          :disabled="!document.canDiscard"
           type="button"
           class="btn btn-secondary"
           @click="document.discard()"
@@ -50,11 +53,19 @@
           Discard
         </button>
         <button
+          :disabled="!document.canRemove"
+          type="button"
+          class="btn btn-danger"
+          @click="document.remove()"
+        >
+          Delete
+        </button>
+        <button
           type="button"
           class="btn btn-secondary"
           @click="$router.push({ name: 'SampleList' })"
         >
-          Cancel
+          Back
         </button>
       </form>
     </div>
@@ -66,21 +77,36 @@ import Vue from "vue";
 import dayjs from "dayjs";
 import firebaseProject from "@/common/firebaseProject";
 import { Sample } from "@/models/sample";
-import { Document } from "@/stores/document";
+import { List } from "@/stores/list";
 import { autoclose } from "@/mixins/autoclose";
 const db = firebaseProject.firestore();
-const collection = db.collection("publicDocuments");
+const list = new List<Sample>(db.collection("publicDocuments"), {
+  listen: false
+});
 
 export default Vue.extend({
   name: "SampleItem",
   mixins: [autoclose],
+  created() {
+    console.log("created", this);
+  },
   computed: {
-    document(): Document<Sample> | null {
-      const documentId = this.$route.params.id || undefined;
-      console.log("document updated", documentId);
-      return documentId
-        ? new Document<Sample>(collection.doc(documentId))
-        : null;
+    document() {
+      const documentId = this.$route.params.id;
+      return list.doc(documentId, {
+        defaultValue: { text: "default sample" },
+        afterSave: ({ newId }) => {
+          if (newId) {
+            this.$router.replace({
+              name: "SampleItem",
+              params: { id: newId }
+            });
+          }
+        },
+        afterRemove: () => {
+          this.$router.push({ name: "SampleList" });
+        }
+      });
     }
   },
   methods: {

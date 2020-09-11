@@ -7,6 +7,7 @@ Vue.use(VueRouter);
 const routes: Array<RouteConfig> = [
   {
     path: "/",
+    name: "Top",
     redirect: _to => {
       return "/about";
     }
@@ -18,7 +19,7 @@ const routes: Array<RouteConfig> = [
     meta: { requiresAuth: true },
     children: [
       {
-        path: "/sample/:id",
+        path: "/sample/item/:id?",
         name: "SampleItem",
         component: () =>
           import(/* webpackChunkName: "main" */ "../views/SampleItem.vue")

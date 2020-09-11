@@ -1,22 +1,22 @@
 <template>
   <div>
     <div class="logo">
-      <router-link to="/"> Top</router-link>
+      <router-link :to="{ name: 'Top' }"> Top</router-link>
     </div>
     <div class="menuItem">
-      <router-link to="/sample" active-class="active">
+      <router-link :to="{ name: 'SampleList' }" active-class="active">
         <i class="fas fa-share"></i>
         Sample
       </router-link>
     </div>
     <div class="menuItem">
-      <router-link to="/about" active-class="active">
+      <router-link :to="{ name: 'About' }" active-class="active">
         <i class="fas fa-share"></i>
         About
       </router-link>
     </div>
     <div class="menuItem">
-      <router-link to="/signOut" active-class="active">
+      <router-link :to="{ name: 'SignOut' }" active-class="active">
         <i class="fas fa-share"></i>
         Sign Out
       </router-link>

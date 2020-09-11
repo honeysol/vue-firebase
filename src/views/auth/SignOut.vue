@@ -33,13 +33,3 @@ export default Vue.extend({
   }
 }
 </style>
-<style lang="scss" scoped>
-.componentRoot {
-  max-width: 400px;
-  margin: 10px auto;
-}
-.btn {
-  margin: 0 4px;
-  line-height: 1em;
-}
-</style>

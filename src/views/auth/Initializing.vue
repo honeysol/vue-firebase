@@ -14,11 +14,11 @@ export default Vue.extend({
   async created() {
     const status = await authentication.getStatus();
     if (status === "member") {
-      this.$router.push({
+      this.$router.replace({
         path: (this.$route.query.redirect as string) || "/"
       });
     } else if (status === "guest") {
-      this.$router.push({
+      this.$router.replace({
         path: "/signIn",
         query: this.$route.query
       });
