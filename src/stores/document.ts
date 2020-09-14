@@ -12,8 +12,6 @@ export type documentReferenceProducer<T> = () => firestore.DocumentReference<T>;
 
 export interface DocumentOptions<T> {
   restriction?: Partial<T>;
-  afterSave?: ({ newId }: { newId: null | string }) => void;
-  afterRemove?: ({ oldId }: { oldId: string }) => void;
   onError?: ({
     error,
     errorMessage
@@ -128,7 +126,7 @@ export class Document<T> {
       if (this.ref) {
         const oldId = this.ref.id;
         await this.ref.delete();
-        this.options?.afterRemove?.({ oldId });
+        return { oldId, successed: true };
       }
     }
   }
@@ -177,7 +175,7 @@ export class Document<T> {
         }
       }
       this.editing = null;
-      this.options?.afterSave?.({ newId: isCreate ? this.ref.id : null });
+      return { newId: isCreate ? this.ref.id : null, successed: true };
     }
   }
   async discard() {

@@ -71,8 +71,7 @@ const db = firebaseProject.firestore();
 export default Vue.extend<
   { authentication: typeof authentication },
   {},
-  { collection: Collection<UserFruit>; list: List<UserFruit> },
-  {}
+  { collection: Collection<UserFruit>; list: List<UserFruit> }
 >({
   name: "UserFruitList",
   mixins: [autoclose],

@@ -47,7 +47,7 @@
           :disabled="!document.canSave"
           type="button"
           class="btn btn-primary"
-          @click="document.save()"
+          @click="save()"
         >
           Save
         </button>
@@ -63,7 +63,7 @@
           :disabled="!document.canRemove"
           type="button"
           class="btn btn-danger"
-          @click="document.remove()"
+          @click="remove()"
         >
           Delete
         </button>
@@ -86,6 +86,7 @@ import { firestore } from "firebase/app";
 import firebaseProject from "@/common/firebaseProject";
 import { CommonFruit } from "@/models/commonFruit";
 import { Collection } from "@/stores/collection";
+import { Document } from "@/stores/document";
 import { autoclose } from "@/mixins/autoclose";
 
 const db = firebaseProject.firestore();
@@ -93,7 +94,7 @@ const collection = new Collection(
   db.collection("commonFruit") as firestore.CollectionReference<CommonFruit>
 );
 
-export default Vue.extend({
+export default Vue.extend<{}, {}, { document: Document<CommonFruit> }>({
   name: "CommonFruitItem",
   mixins: [autoclose],
   created() {
@@ -103,24 +104,28 @@ export default Vue.extend({
     document() {
       const documentId = this.$route.params.id;
       return collection.doc(documentId, {
-        defaultValue: { description: "default description" },
-        afterSave: ({ newId }) => {
-          if (newId) {
-            this.$router.replace({
-              name: "CommonFruitItem",
-              params: { id: newId }
-            });
-          }
-        },
-        afterRemove: () => {
-          this.$router.push({ name: "CommonFruitList" });
-        }
+        defaultValue: { description: "default description" }
       });
     }
   },
   methods: {
     formatDate(timestamp: number) {
       return dayjs(timestamp).format("YYYY-MM-DD HH:mm:ss");
+    },
+    async save() {
+      const { newId } = (await this.document.save()) || {};
+      if (newId) {
+        this.$router.replace({
+          name: "CommonFruitItem",
+          params: { id: newId }
+        });
+      }
+    },
+    async remove() {
+      const { successed } = (await this.document.remove()) || {};
+      if (successed) {
+        this.$router.push({ name: "CommonFruitList" });
+      }
     }
   },
   autoclose: ["document"]

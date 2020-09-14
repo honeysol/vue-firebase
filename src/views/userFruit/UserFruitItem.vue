@@ -56,7 +56,7 @@
           :disabled="!document.canSave"
           type="button"
           class="btn btn-primary"
-          @click="document.save()"
+          @click="save()"
         >
           Save
         </button>
@@ -72,7 +72,7 @@
           :disabled="!document.canRemove"
           type="button"
           class="btn btn-danger"
-          @click="document.remove()"
+          @click="remove()"
         >
           Delete
         </button>
@@ -104,8 +104,7 @@ const db = firebaseProject.firestore();
 export default Vue.extend<
   { authentication: typeof authentication },
   {},
-  { collection: Collection<UserFruit>; document: Document<UserFruit> },
-  { formatDate: (timestamp: number) => string }
+  { collection: Collection<UserFruit>; document: Document<UserFruit> }
 >({
   name: "UserFruitItem",
   mixins: [autoclose],
@@ -131,24 +130,28 @@ export default Vue.extend<
     document() {
       const documentId = this.$route.params.id;
       return this.collection.doc(documentId, {
-        defaultValue: { description: "default description" },
-        afterSave: ({ newId }) => {
-          if (newId) {
-            this.$router.replace({
-              name: "UserFruitItem",
-              params: { id: newId }
-            });
-          }
-        },
-        afterRemove: () => {
-          this.$router.push({ name: "UserFruitList" });
-        }
+        defaultValue: { description: "default description" }
       });
     }
   },
   methods: {
     formatDate(timestamp: number) {
       return dayjs(timestamp).format("YYYY-MM-DD HH:mm:ss");
+    },
+    async save() {
+      const { newId } = (await this.document.save()) || {};
+      if (newId) {
+        this.$router.replace({
+          name: "UserFruitItem",
+          params: { id: newId }
+        });
+      }
+    },
+    async remove() {
+      const { successed } = (await this.document.remove()) || {};
+      if (successed) {
+        this.$router.push({ name: "UserFruitList" });
+      }
     }
   },
   autoclose: ["document"]
