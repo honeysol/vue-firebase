@@ -7,11 +7,19 @@ import { deriveQuery, deriveQueryParams } from "./queryUtil";
 
 // use Symbol to avoid Vue observation
 const refField = Symbol("ref");
+const optionsField = Symbol("option");
+
+interface Options<T> {
+  restriction: Partial<T>;
+}
 
 export class Collection<T> {
+  [optionsField]?: Options<T>;
   [refField]: firestore.CollectionReference<T>;
-  constructor(ref: firestore.CollectionReference<T>) {
+  constructor(ref: firestore.CollectionReference<T>, options?: Options<T>) {
+    console.log("options", options);
     this[refField] = ref;
+    this[optionsField] = options;
     Vue.observable(this);
   }
   get ref() {
@@ -28,7 +36,7 @@ export class Collection<T> {
             producer: () => this.ref.doc(generateDocumentId()),
             defaultValue: options?.defaultValue
           },
-      options
+      { ...options, restriction: this[optionsField]?.restriction }
     );
   }
   list() {
@@ -36,10 +44,22 @@ export class Collection<T> {
   }
   add() {
     this[refField].doc(generateDocumentId()).set(({
+      ...this[optionsField]?.restriction,
       updateTime: Date.now()
     } as unknown) as T);
   }
   query(params: deriveQueryParams) {
-    return new List(deriveQuery({ ...params, query: this.ref }));
+    console.log(this[optionsField]?.restriction, {
+      ...params,
+      filter: { ...params.filter, ...this[optionsField]?.restriction },
+      query: this.ref
+    });
+    return new List(
+      deriveQuery({
+        ...params,
+        filter: { ...params.filter, ...this[optionsField]?.restriction },
+        query: this.ref
+      })
+    );
   }
 }

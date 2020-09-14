@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="mainHeader">CommonFruit</div>
+    <div class="mainHeader">UserFruit</div>
     <div class="mainContent" v-if="list.items">
       <div class="tableWrapper">
         <table class="table">
@@ -25,7 +25,7 @@
             </tr>
           </thead>
           <tbody>
-            <CommonFruitListItem
+            <UserFruitListItem
               v-for="item in list.items"
               :key="item.id + '#'"
               :documentId="item.id"
@@ -46,7 +46,7 @@
         <button
           type="button"
           class="btn btn-secondary"
-          @click="$router.push({ name: 'CommonFruitItem' })"
+          @click="$router.push({ name: 'UserFruitItem' })"
         >
           New
         </button>
@@ -58,31 +58,33 @@
 <script lang="ts">
 import Vue from "vue";
 import firebaseProject from "@/common/firebaseProject";
-import CommonFruitListItem from "@/views/commonFruit/CommonFruitListItem.vue";
+import UserFruitListItem from "@/views/userFruit/UserFruitListItem.vue";
 import { Collection } from "@/stores/collection";
 import { autoclose } from "@/mixins/autoclose";
+import authentication from "@/stores/authentication";
 
 const db = firebaseProject.firestore();
-const collection = new Collection(db.collection("commonFruit"));
 
 export default Vue.extend({
-  name: "Home",
+  name: "UserFruitList",
   mixins: [autoclose],
-  components: { CommonFruitListItem },
+  components: { UserFruitListItem },
   data() {
     return {
-      list: collection.query({
-        // You can use firestore operator ["<=", "array-contains", "in"]
-        // and corresponding mongo-like operator [$gte, $in, $elementMatch]
-        //
-        // filter: { title: "aaa" },
-        // filter: { description: "fff" },
-        // documentId: { $gt: "1747b2878c1d5e466a950839265" },
-        // limit: 1,
-        // limitToLast: 3
-      }),
-      collection
+      authentication
     };
+  },
+  computed: {
+    collection(this: any) {
+      return new Collection(db.collection("userFruit"), {
+        restriction: {
+          userId: this.authentication.userId
+        }
+      });
+    },
+    list() {
+      return this.collection.query({});
+    }
   },
   autoclose: ["list"]
 });

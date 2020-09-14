@@ -10,6 +10,12 @@
       </router-link>
     </div>
     <div class="menuItem">
+      <router-link :to="{ name: 'UserFruitList' }" active-class="active">
+        <i class="fas fa-share"></i>
+        UserFruit
+      </router-link>
+    </div>
+    <div class="menuItem">
       <router-link :to="{ name: 'About' }" active-class="active">
         <i class="fas fa-share"></i>
         About

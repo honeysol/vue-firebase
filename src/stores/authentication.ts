@@ -17,7 +17,7 @@ interface AuthenticationReponse {
   errorMessage?: string;
 }
 
-class Authentication {
+export class Authentication {
   isLoading = true;
   user: null | firebase.User = null;
   userCredential: null | firebase.auth.UserCredential = null;
@@ -29,6 +29,10 @@ class Authentication {
     } else {
       return this.user ? "member" : "guest";
     }
+  }
+
+  get userId() {
+    return this.user?.uid;
   }
 
   async getStatus(): Promise<ResolvedAuthenticationStatus> {

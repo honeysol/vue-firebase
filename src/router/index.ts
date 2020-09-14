@@ -36,6 +36,22 @@ const routes: Array<RouteConfig> = [
           )
       },
       {
+        path: "/userFruit/item/:id?",
+        name: "UserFruitItem",
+        component: () =>
+          import(
+            /* webpackChunkName: "main" */ "@/views/userFruit/UserFruitItem.vue"
+          )
+      },
+      {
+        path: "/userFruit",
+        name: "UserFruitList",
+        component: () =>
+          import(
+            /* webpackChunkName: "main" */ "@/views/userFruit/UserFruitList.vue"
+          )
+      },
+      {
         path: "/about",
         name: "About",
         component: () =>

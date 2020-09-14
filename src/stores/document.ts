@@ -11,6 +11,7 @@ const effectiveField = Symbol("effective");
 export type documentReferenceProducer<T> = () => firestore.DocumentReference<T>;
 
 export interface DocumentOptions<T> {
+  restriction?: Partial<T>;
   afterSave?: ({ newId }: { newId: null | string }) => void;
   afterRemove?: ({ oldId }: { oldId: string }) => void;
   onError?: ({
@@ -152,6 +153,7 @@ export class Document<T> {
           {
             ...this.data,
             ...this.editing,
+            ...this.options?.restriction,
             updateTime: Date.now()
           },
           { merge: true }
@@ -161,6 +163,7 @@ export class Document<T> {
         try {
           await this.ref.update({
             ...this.editing,
+            ...this.options?.restriction,
             updateTime: Date.now()
           });
         } catch (e) {

@@ -1,11 +1,19 @@
 <template>
   <div>
-    <div class="mainHeader">CommonFruit</div>
+    <div class="mainHeader">UserFruit</div>
     <div class="mainContent">
       <form>
         <div class="form-group">
           <label>ID</label>
           <input class="form-control" readonly :value="document.id" />
+        </div>
+        <div class="form-group">
+          <label>User ID</label>
+          <input
+            class="form-control"
+            readonly
+            :value="document.effective.userId"
+          />
         </div>
         <div class="form-group">
           <label>Update Time</label>
@@ -18,6 +26,7 @@
             "
           />
         </div>
+
         <div class="form-group">
           <label>Name</label>
           <input
@@ -70,7 +79,7 @@
         <button
           type="button"
           class="btn btn-secondary"
-          @click="$router.push({ name: 'CommonFruitList' })"
+          @click="$router.push({ name: 'UserFruitList' })"
         >
           Back
         </button>
@@ -82,37 +91,51 @@
 <script lang="ts">
 import Vue from "vue";
 import dayjs from "dayjs";
+import { firestore } from "firebase/app";
 import firebaseProject from "@/common/firebaseProject";
-import { CommonFruit } from "@/models/commonFruit";
+import { UserFruit } from "@/models/userFruit";
 import { Collection } from "@/stores/collection";
 import { autoclose } from "@/mixins/autoclose";
-import { firestore } from "firebase/app";
+import authentication from "@/stores/authentication";
+
 const db = firebaseProject.firestore();
-const collection = new Collection<CommonFruit>(
-  db.collection("commonFruit") as firestore.CollectionReference<CommonFruit>
-);
 
 export default Vue.extend({
-  name: "CommonFruitItem",
+  name: "UserFruitItem",
   mixins: [autoclose],
   created() {
     console.log("created", this);
   },
+  data() {
+    return {
+      authentication
+    };
+  },
   computed: {
+    collection(this: any) {
+      return new Collection<UserFruit>(
+        db.collection("userFruit") as firestore.CollectionReference<UserFruit>,
+        {
+          restriction: {
+            userId: this.authentication.userId
+          }
+        }
+      );
+    },
     document() {
       const documentId = this.$route.params.id;
-      return collection.doc(documentId, {
+      return this.collection.doc(documentId, {
         defaultValue: { description: "default description" },
         afterSave: ({ newId }) => {
           if (newId) {
             this.$router.replace({
-              name: "CommonFruitItem",
+              name: "UserFruitItem",
               params: { id: newId }
             });
           }
         },
         afterRemove: () => {
-          this.$router.push({ name: "CommonFruitList" });
+          this.$router.push({ name: "UserFruitList" });
         }
       });
     }
