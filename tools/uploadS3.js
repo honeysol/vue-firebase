@@ -10,6 +10,7 @@ const s3 = new AWS.S3();
 
 const bucket = process.env.BUCKET;
 const commitId = process.env.CIRCLE_SHA1;
+const branchId = process.env.CIRCLE_BRANCH.replace(/\//g, "-");
 const sourcePath = "dist";
 const destinationPath = "/";
 
@@ -41,25 +42,29 @@ const mimeTypes = {
       const fileContent = fs.readFileSync(path.join(sourcePath, file));
       const extname = path.extname(file);
       const mimeType = mimeTypes[extname] || mimeTypes["default"];
-      const params = {
-        Bucket: bucket,
-        Key: path
-          .join(
-            destinationPath,
-            file.replace(/^\.\/index\.html$/, `/index.${commitId}.html`)
-          )
-          .replace(/^\//, ""),
-        Body: fileContent,
-        ContentType: mimeType,
-        ACL: "public-read"
-      };
-      console.log("start", file, params.Key);
-      promises.push(
-        (async () => {
-          await s3.upload(params).promise();
-          console.log("finished", params.Key);
-        })()
-      );
+      const filePaths = (() => {
+        if (file.match(/^\.\/index\.html$/)) {
+          return [`/index.${commitId}.html`, `/index.${branchId}.html`];
+        } else {
+          return [file];
+        }
+      })();
+      for (const filePath of filePaths) {
+        const params = {
+          Bucket: bucket,
+          Key: path.join(destinationPath, filePath).replace(/^\//, ""),
+          Body: fileContent,
+          ContentType: mimeType,
+          ACL: "public-read"
+        };
+        console.log("start", file, params.Key);
+        promises.push(
+          (async () => {
+            await s3.upload(params).promise();
+            console.log("finished", params.Key);
+          })()
+        );
+      }
     }
     await Promise.all(promises);
     console.log("all finished", extnames);
