@@ -68,13 +68,8 @@ export class Document<T> {
         Vue.set(this.editing, _key, value);
         return true;
       },
-      has: (target, key: string | number | symbol): boolean => {
-        const _key = key as keyof T;
-        return (
-          (this.editing && Object.hasOwnProperty.call(this.editing, _key)) ||
-          (this.data && Object.hasOwnProperty.call(this.data, _key)) ||
-          false
-        );
+      has: (_target, _key: string | number | symbol): boolean => {
+        return true;
       }
     }) as Partial<T>;
     // console.log(this[effectiveField]);
