@@ -57,15 +57,23 @@
 
 <script lang="ts">
 import Vue from "vue";
+import { firestore } from "firebase/app";
 import firebaseProject from "@/common/firebaseProject";
+import { UserFruit } from "@/models/userFruit";
 import UserFruitListItem from "@/views/userFruit/UserFruitListItem.vue";
 import { Collection } from "@/stores/collection";
+import { List } from "@/stores/list";
 import { autoclose } from "@/mixins/autoclose";
 import authentication from "@/stores/authentication";
 
 const db = firebaseProject.firestore();
 
-export default Vue.extend({
+export default Vue.extend<
+  { authentication: typeof authentication },
+  {},
+  { collection: Collection<UserFruit>; list: List<UserFruit> },
+  {}
+>({
   name: "UserFruitList",
   mixins: [autoclose],
   components: { UserFruitListItem },
@@ -75,12 +83,15 @@ export default Vue.extend({
     };
   },
   computed: {
-    collection(this: any) {
-      return new Collection(db.collection("userFruit"), {
-        restriction: {
-          userId: this.authentication.userId
+    collection() {
+      return new Collection(
+        db.collection("userFruit") as firestore.CollectionReference<UserFruit>,
+        {
+          restriction: {
+            userId: this.authentication.userId
+          }
         }
-      });
+      );
     },
     list() {
       return this.collection.query({});

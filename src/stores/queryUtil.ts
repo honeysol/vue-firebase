@@ -32,14 +32,14 @@ export type deriveQueryParams = {
   limitToLast?: number;
 };
 
-const deriveQueryForKey = ({
+const deriveQueryForKey = <T>({
   condition,
   key,
   query
 }: {
   condition: filterFieldParams;
   key: firestore.FieldPath | string;
-  query: firestore.Query;
+  query: firestore.Query<T>;
 }) => {
   let _query = query;
   if (typeof condition === "object") {
@@ -63,14 +63,14 @@ const deriveQueryForKey = ({
   return _query;
 };
 
-export const deriveQuery = ({
+export const deriveQuery = <T>({
   query,
   filter,
   documentId,
   limit,
   limitToLast
-}: deriveQueryParams & { query: firestore.Query }) => {
-  let _query: firestore.Query = query;
+}: deriveQueryParams & { query: firestore.Query<T> }) => {
+  let _query = query;
   if (filter) {
     for (const key of Object.keys(filter) as (keyof typeof filter)[]) {
       _query = deriveQueryForKey({

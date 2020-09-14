@@ -82,13 +82,14 @@
 <script lang="ts">
 import Vue from "vue";
 import dayjs from "dayjs";
+import { firestore } from "firebase/app";
 import firebaseProject from "@/common/firebaseProject";
 import { CommonFruit } from "@/models/commonFruit";
 import { Collection } from "@/stores/collection";
 import { autoclose } from "@/mixins/autoclose";
-import { firestore } from "firebase/app";
+
 const db = firebaseProject.firestore();
-const collection = new Collection<CommonFruit>(
+const collection = new Collection(
   db.collection("commonFruit") as firestore.CollectionReference<CommonFruit>
 );
 

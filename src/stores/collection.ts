@@ -54,8 +54,8 @@ export class Collection<T> {
       filter: { ...params.filter, ...this[optionsField]?.restriction },
       query: this.ref
     });
-    return new List(
-      deriveQuery({
+    return new List<T>(
+      deriveQuery<T>({
         ...params,
         filter: { ...params.filter, ...this[optionsField]?.restriction },
         query: this.ref

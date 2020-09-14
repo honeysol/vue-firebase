@@ -95,12 +95,18 @@ import { firestore } from "firebase/app";
 import firebaseProject from "@/common/firebaseProject";
 import { UserFruit } from "@/models/userFruit";
 import { Collection } from "@/stores/collection";
+import { Document } from "@/stores/document";
 import { autoclose } from "@/mixins/autoclose";
 import authentication from "@/stores/authentication";
 
 const db = firebaseProject.firestore();
 
-export default Vue.extend({
+export default Vue.extend<
+  { authentication: typeof authentication },
+  {},
+  { collection: Collection<UserFruit>; document: Document<UserFruit> },
+  { formatDate: (timestamp: number) => string }
+>({
   name: "UserFruitItem",
   mixins: [autoclose],
   created() {
@@ -112,8 +118,8 @@ export default Vue.extend({
     };
   },
   computed: {
-    collection(this: any) {
-      return new Collection<UserFruit>(
+    collection() {
+      return new Collection(
         db.collection("userFruit") as firestore.CollectionReference<UserFruit>,
         {
           restriction: {

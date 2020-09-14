@@ -57,13 +57,17 @@
 
 <script lang="ts">
 import Vue from "vue";
+import { firestore } from "firebase/app";
 import firebaseProject from "@/common/firebaseProject";
+import { CommonFruit } from "@/models/commonFruit";
 import CommonFruitListItem from "@/views/commonFruit/CommonFruitListItem.vue";
 import { Collection } from "@/stores/collection";
 import { autoclose } from "@/mixins/autoclose";
 
 const db = firebaseProject.firestore();
-const collection = new Collection(db.collection("commonFruit"));
+const collection = new Collection(
+  db.collection("commonFruit") as firestore.CollectionReference<CommonFruit>
+);
 
 export default Vue.extend({
   name: "Home",
