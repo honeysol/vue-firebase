@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="mainHeader">Sample</div>
+    <div class="mainHeader">CommonFruit</div>
     <div class="mainContent" v-if="list.items">
       <div class="tableWrapper">
         <table class="table">
@@ -13,16 +13,19 @@
                 Update Time
               </th>
               <th>
-                Title
+                Name
               </th>
               <th>
-                Text
+                Description
+              </th>
+              <th>
+                Color
               </th>
               <th></th>
             </tr>
           </thead>
           <tbody>
-            <SampleListItem
+            <CommonFruitListItem
               v-for="item in list.items"
               :key="item.id + '#'"
               :documentId="item.id"
@@ -43,7 +46,7 @@
         <button
           type="button"
           class="btn btn-secondary"
-          @click="$router.push({ name: 'SampleItem' })"
+          @click="$router.push({ name: 'CommonFruitItem' })"
         >
           New
         </button>
@@ -55,7 +58,7 @@
 <script lang="ts">
 import Vue from "vue";
 import firebaseProject from "@/common/firebaseProject";
-import SampleListItem from "@/views/SampleListItem.vue";
+import CommonFruitListItem from "@/views/commonFruit/CommonFruitListItem.vue";
 import { Collection } from "@/stores/collection";
 import { autoclose } from "@/mixins/autoclose";
 
@@ -65,7 +68,7 @@ const collection = new Collection(db.collection("publicDocuments"));
 export default Vue.extend({
   name: "Home",
   mixins: [autoclose],
-  components: { SampleListItem },
+  components: { CommonFruitListItem },
   data() {
     return {
       list: collection.query({
@@ -73,7 +76,7 @@ export default Vue.extend({
         // and corresponding mongo-like operator [$gte, $in, $elementMatch]
         //
         // filter: { title: "aaa" },
-        // filter: { text: "fff" },
+        // filter: { description: "fff" },
         // documentId: { $gt: "1747b2878c1d5e466a950839265" },
         // limit: 1,
         // limitToLast: 3

@@ -15,26 +15,31 @@ const routes: Array<RouteConfig> = [
   {
     path: "/main",
     name: "Main",
-    component: () => import(/* webpackChunkName: "main" */ "../views/Main.vue"),
+    component: () =>
+      import(/* webpackChunkName: "main" */ "@/views/layout/Main.vue"),
     meta: { requiresAuth: true },
     children: [
       {
-        path: "/sample/item/:id?",
-        name: "SampleItem",
+        path: "/commonFruit/item/:id?",
+        name: "CommonFruitItem",
         component: () =>
-          import(/* webpackChunkName: "main" */ "../views/SampleItem.vue")
+          import(
+            /* webpackChunkName: "main" */ "@/views/commonFruit/CommonFruitItem.vue"
+          )
       },
       {
-        path: "/sample",
-        name: "SampleList",
+        path: "/commonFruit",
+        name: "CommonFruitList",
         component: () =>
-          import(/* webpackChunkName: "main" */ "../views/SampleList.vue")
+          import(
+            /* webpackChunkName: "main" */ "@/views/commonFruit/CommonFruitList.vue"
+          )
       },
       {
         path: "/about",
         name: "About",
         component: () =>
-          import(/* webpackChunkName: "main" */ "../views/About.vue")
+          import(/* webpackChunkName: "main" */ "@/views/About.vue")
       }
     ]
   },

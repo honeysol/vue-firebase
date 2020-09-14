@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="mainHeader">Sample</div>
+    <div class="mainHeader">CommonFruit</div>
     <div class="mainContent">
       <form>
         <div class="form-group">
@@ -19,21 +19,30 @@
           />
         </div>
         <div class="form-group">
-          <label>Title</label>
+          <label>Name</label>
           <input
             class="form-control"
-            :class="document.edited('title') && 'isEditing'"
-            v-model="document.effective.title"
+            :class="document.edited('name') && 'isEditing'"
+            v-model="document.effective.name"
           />
         </div>
         <div class="form-group">
-          <label>Text</label>
+          <label>Description</label>
           <input
             class="form-control"
-            :class="document.edited('text') && 'isEditing'"
-            v-model="document.effective.text"
+            :class="document.edited('description') && 'isEditing'"
+            v-model="document.effective.description"
           />
         </div>
+        <div class="form-group">
+          <label>Color</label>
+          <input
+            class="form-control"
+            :class="document.edited('color') && 'isEditing'"
+            v-model="document.effective.color"
+          />
+        </div>
+
         <button
           :disabled="!document.canSave"
           type="button"
@@ -61,7 +70,7 @@
         <button
           type="button"
           class="btn btn-secondary"
-          @click="$router.push({ name: 'SampleList' })"
+          @click="$router.push({ name: 'CommonFruitList' })"
         >
           Back
         </button>
@@ -74,14 +83,17 @@
 import Vue from "vue";
 import dayjs from "dayjs";
 import firebaseProject from "@/common/firebaseProject";
-import { Sample } from "@/models/sample";
+import { CommonFruit } from "@/models/commonFruit";
 import { Collection } from "@/stores/collection";
 import { autoclose } from "@/mixins/autoclose";
+import { firestore } from "firebase/app";
 const db = firebaseProject.firestore();
-const collection = new Collection<Sample>(db.collection("publicDocuments"));
+const collection = new Collection<CommonFruit>(
+  db.collection("publicDocuments") as firestore.CollectionReference<CommonFruit>
+);
 
 export default Vue.extend({
-  name: "SampleItem",
+  name: "CommonFruitItem",
   mixins: [autoclose],
   created() {
     console.log("created", this);
@@ -90,17 +102,17 @@ export default Vue.extend({
     document() {
       const documentId = this.$route.params.id;
       return collection.doc(documentId, {
-        defaultValue: { text: "default sample" },
+        defaultValue: { description: "default description" },
         afterSave: ({ newId }) => {
           if (newId) {
             this.$router.replace({
-              name: "SampleItem",
+              name: "CommonFruitItem",
               params: { id: newId }
             });
           }
         },
         afterRemove: () => {
-          this.$router.push({ name: "SampleList" });
+          this.$router.push({ name: "CommonFruitList" });
         }
       });
     }

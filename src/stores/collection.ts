@@ -19,7 +19,7 @@ export class Collection<T> {
   }
   doc(
     documentId: string | null | undefined,
-    options?: DocumentOptions<T> & { defaultValue?: T }
+    options?: DocumentOptions<T> & { defaultValue?: Partial<T> }
   ): Document<T> {
     return new Document<T>(
       documentId

@@ -6,14 +6,20 @@
     </td>
     <td>
       <input
-        :class="document.edited('title') && 'isEditing'"
-        v-model="document.effective.title"
+        :class="document.edited('name') && 'isEditing'"
+        v-model="document.effective.name"
       />
     </td>
     <td>
       <input
-        :class="document.edited('text') && 'isEditing'"
-        v-model="document.effective.text"
+        :class="document.edited('description') && 'isEditing'"
+        v-model="document.effective.description"
+      />
+    </td>
+    <td>
+      <input
+        :class="document.edited('color') && 'isEditing'"
+        v-model="document.effective.color"
       />
     </td>
 
@@ -46,7 +52,7 @@
         type="button"
         class="btn btn-secondary"
         @click="
-          $router.push({ name: 'SampleItem', params: { id: document.id } })
+          $router.push({ name: 'CommonFruitItem', params: { id: document.id } })
         "
       >
         Open
@@ -58,20 +64,20 @@
 <script lang="ts">
 import Vue from "vue";
 import dayjs from "dayjs";
-import { Sample } from "@/models/sample";
+import { CommonFruit } from "@/models/commonFruit";
 import { Document } from "@/stores/document";
 import { Collection } from "@/stores/collection";
 import { autoclose } from "@/mixins/autoclose";
 
 export default Vue.extend({
-  name: "SampleListItem",
+  name: "CommonFruitListItem",
   mixins: [autoclose],
   props: {
     documentId: String as Vue.PropType<string>,
-    collection: Object as Vue.PropType<Collection<Sample>>
+    collection: Object as Vue.PropType<Collection<CommonFruit>>
   },
   computed: {
-    document(): Document<Sample> {
+    document(): Document<CommonFruit> {
       return this.collection.doc(this.documentId);
     }
   },

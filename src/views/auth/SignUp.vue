@@ -41,7 +41,7 @@ class SignUpData {
 }
 
 export default Vue.extend({
-  name: "SampleListItem",
+  name: "CommonFruitListItem",
   components: {},
   props: {},
   data() {

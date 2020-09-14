@@ -4,9 +4,9 @@
       <router-link :to="{ name: 'Top' }"> Top</router-link>
     </div>
     <div class="menuItem">
-      <router-link :to="{ name: 'SampleList' }" active-class="active">
+      <router-link :to="{ name: 'CommonFruitList' }" active-class="active">
         <i class="fas fa-share"></i>
-        Sample
+        CommonFruit
       </router-link>
     </div>
     <div class="menuItem">
