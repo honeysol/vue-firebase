@@ -52,7 +52,7 @@
         type="button"
         class="btn btn-secondary"
         @click="
-          $router.push({ name: 'CommonFruitItem', params: { id: document.id } })
+          $router.push({ name: 'SharedFruitItem', params: { id: document.id } })
         "
       >
         Open
@@ -64,20 +64,20 @@
 <script lang="ts">
 import Vue from "vue";
 import dayjs from "dayjs";
-import { CommonFruit } from "@/models/commonFruit";
+import { SharedFruit } from "@/models/sharedFruit";
 import { Document } from "@/stores/document";
 import { Collection } from "@/stores/collection";
 import { autoclose } from "@/mixins/autoclose";
 
 export default Vue.extend({
-  name: "CommonFruitListItem",
+  name: "SharedFruitListItem",
   mixins: [autoclose],
   props: {
     documentId: String as Vue.PropType<string>,
-    collection: Object as Vue.PropType<Collection<CommonFruit>>
+    collection: Object as Vue.PropType<Collection<SharedFruit>>
   },
   computed: {
-    document(): Document<CommonFruit> {
+    document(): Document<SharedFruit> {
       return this.collection.doc(this.documentId);
     }
   },

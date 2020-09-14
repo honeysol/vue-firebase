@@ -20,19 +20,19 @@ const routes: Array<RouteConfig> = [
     meta: { requiresAuth: true },
     children: [
       {
-        path: "/commonFruit/item/:id?",
-        name: "CommonFruitItem",
+        path: "/sharedFruit/item/:id?",
+        name: "SharedFruitItem",
         component: () =>
           import(
-            /* webpackChunkName: "main" */ "@/views/commonFruit/CommonFruitItem.vue"
+            /* webpackChunkName: "main" */ "@/views/sharedFruit/SharedFruitItem.vue"
           )
       },
       {
-        path: "/commonFruit",
-        name: "CommonFruitList",
+        path: "/sharedFruit",
+        name: "SharedFruitList",
         component: () =>
           import(
-            /* webpackChunkName: "main" */ "@/views/commonFruit/CommonFruitList.vue"
+            /* webpackChunkName: "main" */ "@/views/sharedFruit/SharedFruitList.vue"
           )
       },
       {

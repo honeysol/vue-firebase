@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="mainHeader">CommonFruit</div>
+    <div class="mainHeader">Shared Fruit</div>
     <div class="mainContent">
       <form>
         <div class="form-group">
@@ -70,7 +70,7 @@
         <button
           type="button"
           class="btn btn-secondary"
-          @click="$router.push({ name: 'CommonFruitList' })"
+          @click="$router.push({ name: 'SharedFruitList' })"
         >
           Back
         </button>
@@ -84,18 +84,18 @@ import Vue from "vue";
 import dayjs from "dayjs";
 import { firestore } from "firebase/app";
 import firebaseProject from "@/common/firebaseProject";
-import { CommonFruit } from "@/models/commonFruit";
+import { SharedFruit } from "@/models/sharedFruit";
 import { Collection } from "@/stores/collection";
 import { Document } from "@/stores/document";
 import { autoclose } from "@/mixins/autoclose";
 
 const db = firebaseProject.firestore();
 const collection = new Collection(
-  db.collection("commonFruit") as firestore.CollectionReference<CommonFruit>
+  db.collection("sharedFruit") as firestore.CollectionReference<SharedFruit>
 );
 
-export default Vue.extend<{}, {}, { document: Document<CommonFruit> }>({
-  name: "CommonFruitItem",
+export default Vue.extend<{}, {}, { document: Document<SharedFruit> }>({
+  name: "SharedFruitItem",
   mixins: [autoclose],
   created() {
     console.log("created", this);
@@ -116,7 +116,7 @@ export default Vue.extend<{}, {}, { document: Document<CommonFruit> }>({
       const { newId } = (await this.document.save()) || {};
       if (newId) {
         this.$router.replace({
-          name: "CommonFruitItem",
+          name: "SharedFruitItem",
           params: { id: newId }
         });
       }
@@ -124,7 +124,7 @@ export default Vue.extend<{}, {}, { document: Document<CommonFruit> }>({
     async remove() {
       const { successed } = (await this.document.remove()) || {};
       if (successed) {
-        this.$router.push({ name: "CommonFruitList" });
+        this.$router.push({ name: "SharedFruitList" });
       }
     }
   },
@@ -132,11 +132,11 @@ export default Vue.extend<{}, {}, { document: Document<CommonFruit> }>({
 });
 </script>
 <style lang="scss" scoped>
-.isEditing {
-  background: #fee;
-}
 .btn {
   margin: 4px;
+}
+.isEditing {
+  background: #fee;
 }
 form {
   margin: 10px;

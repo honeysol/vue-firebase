@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="mainHeader">CommonFruit</div>
+    <div class="mainHeader">Shared Fruits</div>
     <div class="mainContent" v-if="list.items">
       <div class="tableWrapper">
         <table class="table">
@@ -25,7 +25,7 @@
             </tr>
           </thead>
           <tbody>
-            <CommonFruitListItem
+            <SharedFruitListItem
               v-for="item in list.items"
               :key="item.id + '#'"
               :documentId="item.id"
@@ -46,7 +46,7 @@
         <button
           type="button"
           class="btn btn-secondary"
-          @click="$router.push({ name: 'CommonFruitItem' })"
+          @click="$router.push({ name: 'SharedFruitItem' })"
         >
           New
         </button>
@@ -59,20 +59,20 @@
 import Vue from "vue";
 import { firestore } from "firebase/app";
 import firebaseProject from "@/common/firebaseProject";
-import { CommonFruit } from "@/models/commonFruit";
-import CommonFruitListItem from "@/views/commonFruit/CommonFruitListItem.vue";
+import { SharedFruit } from "@/models/sharedFruit";
+import SharedFruitListItem from "@/views/sharedFruit/SharedFruitListItem.vue";
 import { Collection } from "@/stores/collection";
 import { autoclose } from "@/mixins/autoclose";
 
 const db = firebaseProject.firestore();
 const collection = new Collection(
-  db.collection("commonFruit") as firestore.CollectionReference<CommonFruit>
+  db.collection("sharedFruit") as firestore.CollectionReference<SharedFruit>
 );
 
 export default Vue.extend({
   name: "Home",
   mixins: [autoclose],
-  components: { CommonFruitListItem },
+  components: { SharedFruitListItem },
   data() {
     return {
       list: collection.query({

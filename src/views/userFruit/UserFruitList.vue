@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="mainHeader">UserFruit</div>
+    <div class="mainHeader">User Fruits</div>
     <div class="mainContent" v-if="list.items">
       <div class="tableWrapper">
         <table class="table">

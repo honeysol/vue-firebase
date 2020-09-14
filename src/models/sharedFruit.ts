@@ -1,4 +1,4 @@
-export interface CommonFruit {
+export interface SharedFruit {
   id: string;
   updateTime: number;
   name: string;

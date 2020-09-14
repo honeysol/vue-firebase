@@ -15,7 +15,7 @@ import authentication from "@/stores/authentication";
 import "./main.scss";
 
 export default Vue.extend({
-  name: "CommonFruitListItem",
+  name: "SharedFruitListItem",
   components: { Side },
   data() {
     return {

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="mainHeader">UserFruit</div>
+    <div class="mainHeader">User Fruit</div>
     <div class="mainContent">
       <form>
         <div class="form-group">

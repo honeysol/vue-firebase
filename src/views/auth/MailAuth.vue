@@ -26,7 +26,6 @@ class ChangePasswordData {
 }
 
 export default Vue.extend({
-  name: "CommonFruitListItem",
   components: {},
   props: {},
   data() {
