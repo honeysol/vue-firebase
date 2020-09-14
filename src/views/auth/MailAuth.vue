@@ -1,24 +1,44 @@
 <template>
   <div class="componentRoot">
-    <form>
-      <div class="form-group">
-        <label>Input New Password</label>
-        <input
-          type="password"
-          class="form-control"
-          :class="document.password && 'isEditing'"
-          v-model="document.password"
-        />
-      </div>
-      <button type="button" class="btn btn-primary" @click="changePassword()">
-        OK
-      </button>
-    </form>
+    <ValidationObserver v-slot="{ handleSubmit, failed }">
+      <form>
+        <div class="form-group">
+          <label>Input New Password</label>
+          <ValidationProvider
+            name="Password"
+            rules="required"
+            v-slot="{ errors }"
+          >
+            <input
+              type="password"
+              class="form-control"
+              :class="[
+                document.password && 'isEditing',
+                errors.length && 'is-invalid'
+              ]"
+              v-model="document.password"
+            />
+            <div class="invalid-feedback">
+              {{ errors[0] }}
+            </div>
+          </ValidationProvider>
+        </div>
+        <button
+          type="button"
+          class="btn btn-primary"
+          :disabled="failed"
+          @click="handleSubmit(changePassword)"
+        >
+          OK
+        </button>
+      </form>
+    </ValidationObserver>
   </div>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
+import { form } from "@/mixins/form";
 import authentication from "@/stores/authentication";
 
 class ChangePasswordData {
@@ -26,6 +46,7 @@ class ChangePasswordData {
 }
 
 export default Vue.extend({
+  mixins: [form],
   components: {},
   props: {},
   data() {

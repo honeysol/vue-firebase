@@ -1,42 +1,76 @@
 <template>
   <div class="componentRoot">
-    <form>
-      <div class="form-group">
-        <label>email</label>
-        <input
-          class="form-control"
-          :class="document.email && 'isEditing'"
-          v-model="document.email"
-        />
-      </div>
-      <div class="form-group">
-        <label>Password</label>
-        <input
-          type="password"
-          class="form-control"
-          :class="document.password && 'isEditing'"
-          v-model="document.password"
-        />
-      </div>
-      <div class="alert alert-danger" role="alert" v-if="errorMessage">
-        {{ errorMessage }}
-      </div>
-      <button type="button" class="btn btn-primary" @click="signIn()">
-        Login
-      </button>
-      <button type="button" class="btn btn-danger" @click="discard()">
-        Discard
-      </button>
-      <div class="alert alert-light" role="alert">
-        <div><router-link to="/signUp">Sign Up</router-link></div>
-        <div><router-link to="/passwordReset">Password Reset</router-link></div>
-      </div>
-    </form>
+    <ValidationObserver v-slot="{ handleSubmit, failed }">
+      <form>
+        <div class="form-group">
+          <label>email</label>
+          <ValidationProvider
+            name="email"
+            rules="required|email"
+            v-slot="{ errors }"
+          >
+            <input
+              class="form-control"
+              :class="[
+                document.email && 'isEditing',
+                errors.length && 'is-invalid'
+              ]"
+              v-model="document.email"
+            />
+            <div class="invalid-feedback">
+              {{ errors[0] }}
+            </div>
+          </ValidationProvider>
+        </div>
+        <div class="form-group">
+          <label>Password</label>
+          <ValidationProvider
+            name="Password"
+            rules="required"
+            v-slot="{ errors }"
+          >
+            <input
+              type="password"
+              class="form-control"
+              :class="[
+                document.password && 'isEditing',
+                errors.length && 'is-invalid'
+              ]"
+              v-model="document.password"
+            />
+            <div class="invalid-feedback">
+              {{ errors[0] }}
+            </div>
+          </ValidationProvider>
+        </div>
+        <div class="alert alert-danger" role="alert" v-if="errorMessage">
+          {{ errorMessage }}
+        </div>
+        <button
+          type="button"
+          class="btn btn-primary"
+          :disabled="failed"
+          @click="handleSubmit(signIn)"
+        >
+          Login
+        </button>
+        <button type="button" class="btn btn-danger" @click="discard()">
+          Discard
+        </button>
+        <div class="alert alert-light" role="alert">
+          <div><router-link to="/signUp">Sign Up</router-link></div>
+          <div>
+            <router-link to="/passwordReset">Password Reset</router-link>
+          </div>
+        </div>
+      </form>
+    </ValidationObserver>
   </div>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
+import { form } from "@/mixins/form";
 import authentication from "@/stores/authentication";
 
 class SignInData {
@@ -45,6 +79,7 @@ class SignInData {
 }
 
 export default Vue.extend({
+  mixins: [form],
   components: {},
   props: {},
   data() {
