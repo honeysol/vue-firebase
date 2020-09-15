@@ -3,18 +3,28 @@ import { getErrorMessage, FirebaseError } from "@/common/firebaseErrorMessage";
 import firebase from "firebase/app";
 import Vue from "vue";
 
-const getErrorResponse = (error: FirebaseError): AuthenticationReponse => {
+const getErrorResponse = (error: FirebaseError): AuthenticationResponse => {
   return { status: "error", error, errorMessage: getErrorMessage(error) };
 };
 
-type AuthenticationReponseStatus = "error" | "successed" | "requireMailAuth";
+type AuthenticationResponseStatus = "error" | "successed" | "requireMailAuth";
 type AuthenticationStatus = "initializing" | "member" | "guest";
 type ResolvedAuthenticationStatus = "member" | "guest";
 
-interface AuthenticationReponse {
-  status: AuthenticationReponseStatus;
+type AuthenticationResponse =
+  | AuthenticationResponseError
+  | AuthenticationResponseSuccessed
+  | AuthenticationResponseRequireMailAuth;
+interface AuthenticationResponseError {
+  status: "error";
   error?: Error;
   errorMessage?: string;
+}
+interface AuthenticationResponseSuccessed {
+  status: "successed";
+}
+interface AuthenticationResponseRequireMailAuth {
+  status: "requireMailAuth";
 }
 
 export class Authentication {
@@ -61,7 +71,7 @@ export class Authentication {
   }: {
     email: string;
     password: string;
-  }): Promise<AuthenticationReponse> {
+  }): Promise<AuthenticationResponse> {
     try {
       const userCredential = await firebaseProject
         .auth()
@@ -86,7 +96,7 @@ export class Authentication {
       return getErrorResponse(e);
     }
   }
-  async signUp({ email }: { email: string }): Promise<AuthenticationReponse> {
+  async signUp({ email }: { email: string }): Promise<AuthenticationResponse> {
     try {
       const actionCodeSettings = {
         url:
@@ -110,7 +120,7 @@ export class Authentication {
     email
   }: {
     email: string;
-  }): Promise<AuthenticationReponse> {
+  }): Promise<AuthenticationResponse> {
     try {
       const actionCodeSettings = {
         url:
@@ -131,7 +141,7 @@ export class Authentication {
     }
   }
 
-  async mailAuth({ url }: { url: string }): Promise<AuthenticationReponse> {
+  async mailAuth({ url }: { url: string }): Promise<AuthenticationResponse> {
     try {
       const urlParams = new URLSearchParams(new URL(url).search);
       const email = urlParams.get("email");
@@ -158,7 +168,7 @@ export class Authentication {
     password
   }: {
     password: string;
-  }): Promise<AuthenticationReponse> {
+  }): Promise<AuthenticationResponse> {
     try {
       if (this.user) {
         await this.user.updatePassword(password);
@@ -171,7 +181,7 @@ export class Authentication {
     }
     return { status: "error" };
   }
-  async signOut(): Promise<AuthenticationReponse> {
+  async signOut(): Promise<AuthenticationResponse> {
     try {
       await firebaseProject.auth().signOut();
       this.user = null;

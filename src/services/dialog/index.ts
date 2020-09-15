@@ -20,7 +20,7 @@ const openDialog = <V>({
 }: {
   title: string;
   text: string;
-  buttons: Array<ButtonParams<V>>;
+  buttons: ButtonParams<V>[];
 }): Promise<V | null> => {
   return modalService.openModal<DialogProps<V>, V>({
     props: {

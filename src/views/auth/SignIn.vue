@@ -99,7 +99,7 @@ export default Vue.extend({
           this.$router.replace({
             path: (this.$route.query.redirect as string) || "/"
           });
-        } else {
+        } else if (response.status === "error") {
           this.errorMessage = response.errorMessage;
         }
       }

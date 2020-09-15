@@ -4,7 +4,7 @@ import authentication from "@/stores/authentication";
 
 Vue.use(VueRouter);
 
-const routes: Array<RouteConfig> = [
+const routes: RouteConfig[] = [
   {
     path: "/",
     name: "Top",

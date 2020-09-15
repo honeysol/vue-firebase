@@ -28,7 +28,7 @@ export default Vue.extend({
   },
   data() {
     return {
-      modals: [] as Array<ModalParamAny>
+      modals: [] as ModalParamAny[]
     };
   },
   methods: {

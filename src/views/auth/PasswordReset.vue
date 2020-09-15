@@ -80,7 +80,7 @@ export default Vue.extend({
         console.log("response", response);
         if (response.status === "successed") {
           this.completed = true;
-        } else {
+        } else if (response.status === "error") {
           this.errorMessage = response.errorMessage;
         }
       }
