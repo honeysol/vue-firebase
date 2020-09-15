@@ -80,8 +80,6 @@ class SignInData {
 
 export default Vue.extend({
   mixins: [form],
-  components: {},
-  props: {},
   data() {
     return {
       document: new SignInData(),
@@ -89,7 +87,6 @@ export default Vue.extend({
       errorMessage: null as string | null | undefined
     };
   },
-  computed: {},
   methods: {
     async signIn() {
       console.log(this.document);

@@ -62,8 +62,6 @@ class SignUpData {
 
 export default Vue.extend({
   mixins: [form],
-  components: {},
-  props: {},
   data() {
     return {
       document: new SignUpData(),
@@ -72,7 +70,6 @@ export default Vue.extend({
       errorMessage: null as string | null | undefined
     };
   },
-  computed: {},
   methods: {
     async signUp() {
       if (this.document.email) {

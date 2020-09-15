@@ -47,15 +47,12 @@ class ChangePasswordData {
 
 export default Vue.extend({
   mixins: [form],
-  components: {},
-  props: {},
   data() {
     return {
       document: new ChangePasswordData(),
       authentication
     };
   },
-  computed: {},
   async created() {
     await this.authentication.mailAuth({ url: location.href });
   },
