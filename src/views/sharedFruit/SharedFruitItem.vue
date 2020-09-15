@@ -129,14 +129,14 @@ const collection = new Collection(
   db.collection("sharedFruit") as firestore.CollectionReference<SharedFruit>
 );
 
-export default Vue.extend<{}, {}, { document: Document<SharedFruit> }>({
+export default Vue.extend({
   name: "SharedFruitItem",
   mixins: [autoclose, form],
   created() {
     console.log("created", this);
   },
   computed: {
-    document() {
+    document(): Document<SharedFruit> {
       const documentId = this.$route.params.id;
       return collection.doc(documentId, {
         defaultValue: { description: "default description" }

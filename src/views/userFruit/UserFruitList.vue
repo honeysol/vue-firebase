@@ -68,11 +68,7 @@ import authentication from "@/stores/authentication";
 
 const db = firebaseProject.firestore();
 
-export default Vue.extend<
-  { authentication: typeof authentication },
-  {},
-  { collection: Collection<UserFruit>; list: List<UserFruit> }
->({
+export default Vue.extend({
   name: "UserFruitList",
   mixins: [autoclose],
   components: { UserFruitListItem },
@@ -82,7 +78,7 @@ export default Vue.extend<
     };
   },
   computed: {
-    collection() {
+    collection(): Collection<UserFruit> {
       return new Collection(
         db.collection("userFruit") as firestore.CollectionReference<UserFruit>,
         {
@@ -92,7 +88,7 @@ export default Vue.extend<
         }
       );
     },
-    list() {
+    list(): List<UserFruit> {
       return this.collection.query({});
     }
   },
