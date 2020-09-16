@@ -5,7 +5,7 @@
       <h2>vue-firebase-starter</h2>
       <p>
         This is vue-firebase-starter, an easy starter kit for Vue + Typescript +
-        Firebase without specifit UI kit (use bootstrap and font-awesome only
+        Firebase without specific UI kit (use bootstrap and font-awesome only
         for CSS).
       </p>
       <p>

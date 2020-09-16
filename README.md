@@ -1,5 +1,9 @@
 # vue-firebase
 
+This is an easy starter kit for Vue + Typescript +
+Firebase without specific UI kit (use bootstrap and font-awesome only
+for CSS).
+
 ## Project setup
 ```
 yarn install
@@ -19,6 +23,3 @@ yarn build
 ```
 yarn lint
 ```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
