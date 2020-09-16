@@ -1,7 +1,7 @@
 <template>
   <div class="componentRoot">
     <ValidationObserver v-slot="{ handleSubmit, failed }">
-      <form @submit.prevent="handleSubmit(changePassword)">
+      <form @submit.prevent="handleSubmit(() => loading.run(changePassword))">
         <div class="form-group">
           <label>Input New Password</label>
           <ValidationProvider
@@ -24,6 +24,10 @@
           </ValidationProvider>
         </div>
         <button type="submit" class="btn btn-primary" :disabled="failed">
+          <span
+            v-if="loading.isLoading"
+            class="spinner-border spinner-border-sm"
+          ></span>
           OK
         </button>
       </form>
@@ -35,6 +39,7 @@
 import Vue from "vue";
 import { form } from "@/mixins/form";
 import authentication from "@/stores/authentication";
+import { Loading } from "@/stores/loading";
 
 class ChangePasswordData {
   password: string | null = null;
@@ -44,6 +49,7 @@ export default Vue.extend({
   mixins: [form],
   data() {
     return {
+      loading: new Loading(),
       document: new ChangePasswordData(),
       authentication
     };
@@ -57,7 +63,7 @@ export default Vue.extend({
         await this.authentication.updatePassword({
           password: this.document.password
         });
-        this.$router.push("/signIn");
+        this.$router.push("/");
       }
     }
   }

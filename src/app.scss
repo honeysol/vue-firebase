@@ -1,6 +1,9 @@
 html,
 body,
-#app,
+#app {
+  height: 100%;
+}
+
 .loading {
   height: 100%;
   .spinner-border {

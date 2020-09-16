@@ -1,7 +1,10 @@
 <template>
   <div class="componentRoot">
     <ValidationObserver v-slot="{ handleSubmit, failed }">
-      <form @submit.prevent="handleSubmit(signUp)" v-if="!completed">
+      <form
+        @submit.prevent="handleSubmit(() => loading.run(signUp))"
+        v-if="!completed"
+      >
         <div class="form-group">
           <label>email</label>
           <ValidationProvider
@@ -26,6 +29,11 @@
           {{ errorMessage }}
         </div>
         <button type="submit" class="btn btn-primary" :disabled="failed">
+          <span
+            v-if="loading.isLoading"
+            class="spinner-border spinner-border-sm"
+          ></span>
+
           Send Email
         </button>
         <button type="button" class="btn btn-danger" @click="discard()">
@@ -50,6 +58,7 @@
 import Vue from "vue";
 import { form } from "@/mixins/form";
 import authentication from "@/stores/authentication";
+import { Loading } from "@/stores/loading";
 
 class SignUpData {
   email = null as string | null;
@@ -59,6 +68,7 @@ export default Vue.extend({
   mixins: [form],
   data() {
     return {
+      loading: new Loading(),
       document: new SignUpData(),
       authentication,
       completed: false,
