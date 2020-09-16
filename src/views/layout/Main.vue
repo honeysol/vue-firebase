@@ -10,8 +10,8 @@
 </template>
 <script lang="ts">
 import Vue from "vue";
+import { authentication } from "@/stores";
 import Side from "./Side.vue";
-import authentication from "@/stores/authentication";
 import "./main.scss";
 
 export default Vue.extend({

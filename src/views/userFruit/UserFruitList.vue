@@ -59,12 +59,10 @@
 import Vue from "vue";
 import { firestore } from "firebase/app";
 import firebaseProject from "@/common/firebaseProject";
+import { autoclose } from "@/mixins";
+import { Collection, List, authentication } from "@/stores";
 import { UserFruit } from "@/models/userFruit";
-import UserFruitListItem from "@/views/userFruit/UserFruitListItem.vue";
-import { Collection } from "@/stores/collection";
-import { List } from "@/stores/list";
-import { autoclose } from "@/mixins/autoclose";
-import authentication from "@/stores/authentication";
+import UserFruitListItem from "./UserFruitListItem.vue";
 
 const db = firebaseProject.firestore();
 

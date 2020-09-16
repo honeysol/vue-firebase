@@ -8,7 +8,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import authentication from "@/stores/authentication";
+import { authentication } from "@/stores";
 
 export default Vue.extend({
   async created() {

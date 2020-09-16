@@ -117,12 +117,9 @@ import Vue from "vue";
 import dayjs from "dayjs";
 import { firestore } from "firebase/app";
 import firebaseProject from "@/common/firebaseProject";
+import { form, autoclose } from "@/mixins";
+import { Collection, Document, authentication } from "@/stores";
 import { UserFruit } from "@/models/userFruit";
-import { Collection } from "@/stores/collection";
-import { Document } from "@/stores/document";
-import { autoclose } from "@/mixins/autoclose";
-import { form } from "@/mixins/form";
-import authentication from "@/stores/authentication";
 
 const db = firebaseProject.firestore();
 

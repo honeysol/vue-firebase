@@ -59,10 +59,10 @@
 import Vue from "vue";
 import { firestore } from "firebase/app";
 import firebaseProject from "@/common/firebaseProject";
+import { autoclose } from "@/mixins";
+import { Collection } from "@/stores";
 import { SharedFruit } from "@/models/sharedFruit";
-import SharedFruitListItem from "@/views/sharedFruit/SharedFruitListItem.vue";
-import { Collection } from "@/stores/collection";
-import { autoclose } from "@/mixins/autoclose";
+import SharedFruitListItem from "./SharedFruitListItem.vue";
 
 const db = firebaseProject.firestore();
 const collection = new Collection(

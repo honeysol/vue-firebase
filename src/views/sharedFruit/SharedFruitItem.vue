@@ -117,11 +117,9 @@ import Vue from "vue";
 import dayjs from "dayjs";
 import { firestore } from "firebase/app";
 import firebaseProject from "@/common/firebaseProject";
+import { autoclose, form } from "@/mixins";
+import { Collection, Document } from "@/stores";
 import { SharedFruit } from "@/models/sharedFruit";
-import { Collection } from "@/stores/collection";
-import { Document } from "@/stores/document";
-import { autoclose } from "@/mixins/autoclose";
-import { form } from "@/mixins/form";
 
 const db = firebaseProject.firestore();
 const collection = new Collection(

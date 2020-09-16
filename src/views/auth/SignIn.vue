@@ -69,9 +69,8 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { form } from "@/mixins/form";
-import authentication from "@/stores/authentication";
-import { Loading } from "@/stores/loading";
+import { form } from "@/mixins";
+import { authentication, Loading } from "@/stores";
 
 class SignInData {
   email: string | null = null;

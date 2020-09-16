@@ -195,4 +195,4 @@ export class Authentication {
   }
 }
 
-export default Vue.observable(new Authentication());
+export const authentication = Vue.observable(new Authentication());

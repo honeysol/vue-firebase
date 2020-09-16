@@ -64,10 +64,9 @@
 <script lang="ts">
 import Vue from "vue";
 import dayjs from "dayjs";
+import { autoclose } from "@/mixins";
+import { Document, Collection } from "@/stores";
 import { UserFruit } from "@/models/userFruit";
-import { Document } from "@/stores/document";
-import { Collection } from "@/stores/collection";
-import { autoclose } from "@/mixins/autoclose";
 
 export default Vue.extend({
   name: "UserFruitListItem",

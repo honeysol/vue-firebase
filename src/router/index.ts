@@ -1,6 +1,6 @@
 import Vue from "vue";
 import VueRouter, { RouteConfig } from "vue-router";
-import authentication from "@/stores/authentication";
+import { authentication } from "@/stores";
 
 Vue.use(VueRouter);
 
