@@ -26,11 +26,6 @@ export default Vue.extend({
       transitionName: "fade"
     };
   },
-  methods: {
-    a(): void {
-      this.$route;
-    }
-  },
   watch: {
     $route(to: Route, from: Route) {
       if (to.path.startsWith(from.path)) {
