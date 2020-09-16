@@ -1,6 +1,7 @@
 import Vue from "vue";
 import { firestore } from "firebase/app";
 import { confirm, alert } from "@/services/dialog";
+import { objectGetter, DocumentData, updateDataToObject } from "./objectUtil";
 
 // use Symbol to avoid Vue observation
 const refField = Symbol("ref");
@@ -33,7 +34,7 @@ export interface DocumentCreateParams<T> {
 export class Document<T> {
   data: null | Partial<T> = null;
   exists: boolean | null = null;
-  editing: null | Partial<T> = null;
+  editing: null | firestore.UpdateData = null;
   [effectiveField]: Partial<T>;
   options: DocumentOptions<T> | null = null;
   [refField]: firestore.DocumentReference<T> | null = null;
@@ -53,25 +54,23 @@ export class Document<T> {
       this.data = defaultValue || null;
     }
     this[effectiveField] = new Proxy(Object.create(null), {
-      get: (_target, key: string | number | symbol) => {
-        const _key = key as keyof T;
-        return this.editing && Object.hasOwnProperty.call(this.editing, _key)
-          ? this.editing[_key]
-          : this.data?.[_key];
+      get: (_target, key: string) => {
+        return this.editing && Object.hasOwnProperty.call(this.editing, key)
+          ? this.editing[key]
+          : objectGetter(this.data as DocumentData | null, key);
       },
-      set: (_target, key, value): boolean => {
-        const _key = key as keyof T & (number | string);
+      set: (_target, key: string, value): boolean => {
         if (!this.editing) {
-          this.editing = Object.create(null) as Partial<T>;
+          this.editing = Object.create(null) as firestore.UpdateData;
         }
-        Vue.set(this.editing, _key, value);
+        Vue.set(this.editing, key, value);
         return true;
       },
       has: (_target, _key: string | number | symbol): boolean => {
+        // trick for Vue.set()
         return true;
       }
     }) as Partial<T>;
-    // console.log(this[effectiveField]);
     Vue.observable(this);
   }
   set ref(ref: firestore.DocumentReference<T> | null) {
@@ -150,10 +149,10 @@ export class Document<T> {
         await this.ref.set(
           {
             ...this.data,
-            ...this.editing,
+            ...updateDataToObject(this.editing),
             ...this.options?.restriction,
             updateTime: Date.now()
-          },
+          } as Partial<T>,
           { merge: true }
         );
       } else {

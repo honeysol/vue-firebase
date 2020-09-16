@@ -69,6 +69,22 @@
             </ValidationProvider>
           </div>
           <div class="form-group">
+            <label>Country of Origin (origin.country) </label>
+            <ValidationProvider name="Country of Origin" v-slot="{ errors }">
+              <input
+                class="form-control"
+                :class="[
+                  document.edited('origin.country') && 'isEditing',
+                  errors.length && 'is-invalid'
+                ]"
+                v-model="document.effective['origin.country']"
+              />
+              <div class="invalid-feedback">
+                {{ errors[0] }}
+              </div>
+            </ValidationProvider>
+          </div>
+          <div class="form-group">
             <label>Description</label>
             <input
               class="form-control"
