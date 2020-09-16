@@ -1,7 +1,7 @@
 <template>
   <div class="componentRoot">
     <ValidationObserver v-slot="{ handleSubmit, failed }">
-      <form v-if="!completed">
+      <form @submit.prevent="handleSubmit(signUp)" v-if="!completed">
         <div class="form-group">
           <label>email</label>
           <ValidationProvider
@@ -25,12 +25,7 @@
         <div class="alert alert-danger" role="alert" v-if="errorMessage">
           {{ errorMessage }}
         </div>
-        <button
-          type="button"
-          class="btn btn-primary"
-          :disabled="failed"
-          @click="handleSubmit(signUp)"
-        >
+        <button type="submit" class="btn btn-primary" :disabled="failed">
           Register
         </button>
         <button type="button" class="btn btn-danger" @click="discard()">

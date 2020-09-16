@@ -3,7 +3,7 @@
     <div class="mainHeader">User Fruit</div>
     <div class="mainContent">
       <ValidationObserver v-slot="{ handleSubmit, failed }">
-        <form>
+        <form @submit.prevent="handleSubmit(save)">
           <div class="form-group">
             <label>ID</label>
             <input class="form-control" readonly :value="document.id" />
@@ -78,9 +78,8 @@
           </div>
           <button
             :disabled="!document.canSave || failed"
-            type="button"
+            type="submit"
             class="btn btn-primary"
-            @click="handleSubmit(save)"
           >
             Save
           </button>

@@ -1,7 +1,7 @@
 <template>
   <div class="componentRoot">
     <ValidationObserver v-slot="{ handleSubmit, failed }">
-      <form>
+      <form @submit.prevent="handleSubmit(changePassword)">
         <div class="form-group">
           <label>Input New Password</label>
           <ValidationProvider
@@ -23,12 +23,7 @@
             </div>
           </ValidationProvider>
         </div>
-        <button
-          type="button"
-          class="btn btn-primary"
-          :disabled="failed"
-          @click="handleSubmit(changePassword)"
-        >
+        <button type="submit" class="btn btn-primary" :disabled="failed">
           OK
         </button>
       </form>
