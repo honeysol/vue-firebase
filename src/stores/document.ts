@@ -113,14 +113,16 @@ export class Document<T> {
   close() {
     this.ref = null;
   }
-  async remove() {
+  async remove({ force = false }: { force?: boolean } = {}) {
     if (!this.canRemove) {
       return;
     }
-    const response = await confirm({
-      title: "Confirm",
-      text: "Are you sure to delete?"
-    });
+    const response =
+      force ||
+      (await confirm({
+        title: "Confirm",
+        text: "Are you sure to delete?"
+      }));
     if (response) {
       if (this.ref) {
         const oldId = this.ref.id;
@@ -129,14 +131,19 @@ export class Document<T> {
       }
     }
   }
-  async save() {
+  async removeForce() {
+    return this.remove({ force: true });
+  }
+  async save({ force = false }: { force?: boolean } = {}) {
     if (!this.editing) {
       return;
     }
-    const response = await confirm({
-      title: "Confirm",
-      text: "Are you sure to save?"
-    });
+    const response =
+      force ||
+      (await confirm({
+        title: "Confirm",
+        text: "Are you sure to save?"
+      }));
     if (response) {
       const producer = this[producerField];
       const isCreate = this.ref === null;
@@ -177,18 +184,28 @@ export class Document<T> {
       return { newId: isCreate ? this.ref.id : null, successed: true };
     }
   }
-  async discard() {
+  async saveForce() {
+    return this.save({ force: true });
+  }
+
+  async discard({ force = false }: { force?: boolean } = {}) {
     if (!this.canDiscard) {
       return;
     }
-    const response = await confirm({
-      title: "Confirm",
-      text: "Are you sure to discard?"
-    });
+    const response =
+      force ||
+      (await confirm({
+        title: "Confirm",
+        text: "Are you sure to discard?"
+      }));
     if (response) {
       this.editing = null;
     }
   }
+  async discardForce() {
+    return this.discard({ force: true });
+  }
+
   edited(fieldName?: keyof T) {
     if (fieldName) {
       return (
