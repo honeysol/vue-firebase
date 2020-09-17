@@ -24,17 +24,22 @@
             {{ text }}
           </div>
           <div class="modal-footer">
-            <button
+            <a
               v-for="(button, index) in buttons"
-              @click="close(button.value)"
+              @click="
+                close(button.value);
+                !button.url && $event.preventDefault();
+              "
               :key="index"
+              :download="button.filename"
+              :href="button.url"
               class="btn"
               :class="button.class"
               type="button"
               data-dismiss="modal"
             >
               {{ button.title }}
-            </button>
+            </a>
           </div>
         </div>
       </div>

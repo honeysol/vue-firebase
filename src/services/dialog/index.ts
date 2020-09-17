@@ -4,6 +4,8 @@ export interface ButtonParams<V> {
   title: string;
   class: string;
   value: V;
+  url?: string;
+  filename?: string;
 }
 interface DialogProps<V> {
   title: string;
@@ -73,6 +75,33 @@ export const confirm = async ({
         title: "Cancel",
         class: "btn-secondary",
         value: false
+      }
+    ]
+  });
+  return response;
+};
+
+export const download = async ({
+  title,
+  text,
+  url,
+  filename
+}: {
+  title: string;
+  text: string;
+  url: string;
+  filename: string;
+}) => {
+  const response = await openDialog({
+    title,
+    text,
+    buttons: [
+      {
+        title: "download",
+        class: "btn-primary",
+        value: true,
+        url,
+        filename
       }
     ]
   });
