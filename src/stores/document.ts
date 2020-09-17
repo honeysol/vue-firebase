@@ -11,8 +11,17 @@ const effectiveField = Symbol("effective");
 
 export type documentReferenceProducer<T> = () => firestore.DocumentReference<T>;
 
+/*
+  mode: Specify behaviour in save (this is only applied if params is DocumentEditParams )
+    "replace": Replace if document exists, create if not
+    "soft"(default): Update if document exists, create if not
+    "strict": Update if document exists, fail if not
+*/
+export type documentMode = "replace" | "soft" | "strict" | null;
+
 export interface DocumentOptions<T> {
   restriction?: Partial<T>;
+  mode?: documentMode;
   onError?: ({
     error,
     errorMessage
@@ -134,6 +143,24 @@ export class Document<T> {
   async removeForce() {
     return this.remove({ force: true });
   }
+  async set({ merge = true }: { merge?: boolean } = {}) {
+    if (!this.ref) {
+      const producer = this[producerField];
+      if (!producer) {
+        throw new Error("Internal Error");
+      }
+      this.ref = producer();
+    }
+    await this.ref.set(
+      ({
+        ...this.data,
+        ...updateDataToObject(this.editing || {}),
+        ...this.options?.restriction,
+        updateTime: Date.now()
+      } as unknown) as T,
+      { merge }
+    );
+  }
   async save({ force = false }: { force?: boolean } = {}) {
     if (!this.editing) {
       return;
@@ -145,25 +172,15 @@ export class Document<T> {
         text: "Are you sure to save?"
       }));
     if (response) {
-      const producer = this[producerField];
       const isCreate = this.ref === null;
       if (this.ref === null) {
-        // create new item
-        if (!producer) {
-          throw new Error("Internal Error");
+        this.set();
+        if (this.ref === null) {
+          throw new Error("internal error");
         }
-        this.ref = producer();
-        await this.ref.set(
-          {
-            ...this.data,
-            ...updateDataToObject(this.editing),
-            ...this.options?.restriction,
-            updateTime: Date.now()
-          } as Partial<T>,
-          { merge: true }
-        );
+      } else if (this.options?.mode === "replace") {
+        this.set({ merge: false });
       } else {
-        // update existent item
         try {
           await this.ref.update({
             ...this.editing,
@@ -172,10 +189,14 @@ export class Document<T> {
           });
         } catch (e) {
           if (e.code === "not-found") {
-            await alert({
-              title: "Alert",
-              text: "Document is already removed"
-            });
+            if (this.options?.mode === "soft" || !this.options?.mode) {
+              this.set();
+            } else {
+              await alert({
+                title: "Alert",
+                text: "Document is already removed"
+              });
+            }
           }
           this.options?.onError?.({ error: e, code: e.code });
         }

@@ -10,7 +10,7 @@ export interface ListOptions {
   listen?: boolean;
 }
 
-interface DocData<T> {
+export interface DocData<T> {
   id: string;
   document: T;
 }
