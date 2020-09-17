@@ -5,9 +5,19 @@ Firebase without specific UI kit (use bootstrap and font-awesome only
 for CSS).
 
 ## Project setup
+
+### 1. 
 ```
 yarn install
 ```
+
+### 2.
+
+set up firebase and
+put src/config/firebaseConfig.json
+
+
+## Commands
 
 ### Compiles and hot-reloads for development
 ```
