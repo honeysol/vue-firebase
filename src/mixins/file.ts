@@ -25,8 +25,8 @@ export const file = Vue.extend({
       this.$emit("input", null);
     },
     async change(event: Event) {
-      console.log(event);
-      const file = (event.target as HTMLInputElement)?.files?.[0];
+      const target = event.target as HTMLInputElement;
+      const file = target.files?.[0];
       if (!file || !authentication.userId) {
         return;
       }
@@ -35,6 +35,9 @@ export const file = Vue.extend({
 
       this.releaseUrl();
       this.url = URL.createObjectURL(file);
+
+      (target as any).value = null;
+
       this.uploadedFile = {
         url: this.url,
         value: path
