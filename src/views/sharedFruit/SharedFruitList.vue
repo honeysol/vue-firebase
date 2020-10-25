@@ -3,8 +3,8 @@
     <div class="mainHeader">Shared Fruits</div>
     <div class="mainContent" v-if="list.items">
       <div class="tableWrapper">
-        <table class="table">
-          <thead class="thead-light">
+        <table class="table c-table">
+          <thead class="thead-light c-table-head">
             <tr>
               <th>
                 ID
@@ -24,7 +24,7 @@
               <th></th>
             </tr>
           </thead>
-          <tbody>
+          <tbody class="c-table-body">
             <SharedFruitListItem
               v-for="item in list.items"
               :key="item.id + '#'"

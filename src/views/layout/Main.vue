@@ -52,7 +52,7 @@ $sidebarWidth: 200px;
 .sideColumn {
   height: 100%;
   position: fixed;
-  background: #333;
+  background: #222d32;
   color: #fff;
   width: $sidebarWidth;
   top: 0;

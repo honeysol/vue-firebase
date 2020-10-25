@@ -3,8 +3,8 @@
     <div class="mainHeader">User Fruits</div>
     <div class="mainContent" v-if="list.items">
       <div class="tableWrapper">
-        <table class="table">
-          <thead class="thead-light">
+        <table class="table c-table">
+          <thead class="thead-light c-table-head">
             <tr>
               <th>
                 ID

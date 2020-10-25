@@ -50,7 +50,7 @@
       </button>
       <button
         type="button"
-        class="btn btn-secondary"
+        class="btn btn-default"
         @click="
           $router.push({ name: 'SharedFruitItem', params: { id: document.id } })
         "

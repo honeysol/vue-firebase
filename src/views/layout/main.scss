@@ -1,4 +1,23 @@
+.sideColumn {
+  .menuItem {
+    a {
+      font-size: 14px;
+      color: #b8c7ce;
+      border-left: 3px solid transparent;
+      &.active {
+        color: #fff;
+        background-color: #1e282c;
+        border-left-color: #3c8dbc;
+      }
+      &:hover {
+        color: #fff;
+        background: #1e282c;
+      }
+    }
+  }
+}
 .mainColumn {
+  background-color: #ecf0f5;
   .mainHeader {
     background: #f7dfcf;
     color: #8a3b06;
