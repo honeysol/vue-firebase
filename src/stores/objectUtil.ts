@@ -49,7 +49,7 @@ const _objectSetter = <V>(
     obj[fields[index]] = value;
   } else {
     if (typeof obj[field] === "undefined") {
-      obj[field] || {};
+      obj[field] = obj[field] || {};
     }
     return _objectSetter(obj[field], fields, value, index + 1);
   }
